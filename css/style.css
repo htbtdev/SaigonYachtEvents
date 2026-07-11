@@ -391,19 +391,13 @@ a { text-decoration: none; color: inherit; }
   padding: 12px 12px 52px;
   box-shadow: 0 8px 22px rgba(32, 36, 42, .22);
   border-radius: 2px;
-  transform: rotate(var(--rot, 0deg)) translateY(var(--ty, 0));
+  /* --rot / --tx / --ty attribués individuellement en JS pour un désordre naturel */
+  transform: rotate(var(--rot, 0deg)) translate(var(--tx, 0), var(--ty, 0));
   transition: transform .45s ease, box-shadow .45s ease;
 }
-/* rotations et décalages « posés à la main » */
-.grid a:nth-child(4n+1) { --rot: -2.6deg; --ty: 5px; }
-.grid a:nth-child(4n+2) { --rot: 1.9deg;  --ty: -5px; }
-.grid a:nth-child(4n+3) { --rot: -1.2deg; --ty: 8px; }
-.grid a:nth-child(4n)   { --rot: 2.7deg;  --ty: -7px; }
-.grid a:nth-child(8n+3) { --rot: 3.1deg; }
-.grid a:nth-child(8n+6) { --rot: -3deg;  --ty: 6px; }
 /* au survol : le polaroid se redresse et se soulève */
 .grid a:hover {
-  transform: rotate(0deg) translateY(calc(var(--ty, 0px) - 4px)) scale(1.045);
+  transform: rotate(0deg) translate(var(--tx, 0), calc(var(--ty, 0px) - 4px)) scale(1.045);
   box-shadow: 0 18px 40px rgba(32, 36, 42, .3);
   z-index: 3;
 }

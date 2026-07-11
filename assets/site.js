@@ -79,12 +79,19 @@
   };
   var CAPTION_POOL = ['Memories', 'Good vibes', 'What a day!', 'On the river'];
 
+  // pseudo-aléatoire déterministe : le même désordre à chaque visite
+  function rnd(seed) { var x = Math.sin(seed * 12.9898) * 43758.5453; return x - Math.floor(x); }
+
   var DELAYS = ['', 'd1', 'd2', 'd3']; // apparition en cascade, comme le proto
   var grid = document.querySelector('.grid');
   P.gallery.forEach(function (src, i) {
     var a = document.createElement('a');
     a.href = src;
     a.className = ('reveal ' + DELAYS[i % 4]).trim();
+    // désordre naturel : chaque polaroid a sa rotation et ses décalages propres
+    a.style.setProperty('--rot', (rnd(i + 1) * 9 - 4.5).toFixed(2) + 'deg');   // -4,5° à +4,5°
+    a.style.setProperty('--ty',  (rnd(i + 13) * 26 - 13).toFixed(1) + 'px');   // -13 à +13 px
+    a.style.setProperty('--tx',  (rnd(i + 29) * 16 - 8).toFixed(1) + 'px');    // -8 à +8 px
     a.addEventListener('click', function (e) { e.preventDefault(); openLightbox(i); });
     if (isVideo(src)) {
       // vignette vidéo : première image seulement (léger), badge ▶ via CSS
@@ -100,11 +107,12 @@
       img.src = src; img.alt = 'saigonyachtevents'; img.loading = 'lazy';
       a.appendChild(img);
     }
-    // légende manuscrite du polaroid
+    // légende manuscrite du polaroid — inclinaison propre à chacune
     var name = src.split('/').pop();
     var cap = document.createElement('span');
     cap.className = 'cap';
     cap.textContent = CAPTIONS[name] || CAPTION_POOL[i % CAPTION_POOL.length];
+    cap.style.transform = 'rotate(' + (rnd(i + 47) * 6 - 3).toFixed(2) + 'deg)';
     a.appendChild(cap);
     grid.appendChild(a);
   });
