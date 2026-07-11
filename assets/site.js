@@ -67,8 +67,9 @@
 
   /* Légendes manuscrites des polaroids — modifiez librement ici.
      Clé = nom du fichier dans assets/img/Gallery. Les fichiers sans
-     légende reçoivent une phrase de la réserve ci-dessous. */
-  var CAPTIONS = {
+     légende reçoivent une phrase de la réserve ci-dessous.
+     La page VI définit ses propres légendes via window.GALLERY_CAPTIONS. */
+  var CAPTIONS = window.GALLERY_CAPTIONS || {
     '01.jpg': 'Love is in the air',
     '02.jpg': 'She said yes!',
     '03.jpg': 'Just the two of us',
@@ -90,7 +91,7 @@
     '19-clip.mp4': 'Birthday cruise',
     '20-clip.mp4': 'White party!'
   };
-  var CAPTION_POOL = ['Memories', 'Good vibes', 'What a day!', 'On the river'];
+  var CAPTION_POOL = window.GALLERY_CAPTION_POOL || ['Memories', 'Good vibes', 'What a day!', 'On the river'];
 
   // pseudo-aléatoire déterministe : le même désordre à chaque visite
   function rnd(seed) { var x = Math.sin(seed * 12.9898) * 43758.5453; return x - Math.floor(x); }

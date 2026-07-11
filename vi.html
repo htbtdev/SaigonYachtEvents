@@ -8,7 +8,8 @@
   <link rel="icon" type="image/png" href="assets/img/favicon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Nunito+Sans:wght@300;400;600&family=Caveat:wght@500;600&display=swap" rel="stylesheet" />
+  <!-- Dancing Script pour les légendes manuscrites : Caveat ne couvre pas les diacritiques vietnamiens -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Nunito+Sans:wght@300;400;600&family=Dancing+Script:wght@500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
@@ -107,6 +108,33 @@
     </a>
   </footer>
 
+  <script>
+    // Légendes vietnamiennes des polaroids de la galerie
+    // (clé = nom du fichier dans assets/img/Gallery)
+    window.GALLERY_CAPTIONS = {
+      '01.jpg': 'Yêu thương ngập tràn',
+      '02.jpg': 'Cô ấy đã đồng ý!',
+      '03.jpg': 'Chỉ riêng đôi ta',
+      '04.jpg': 'Mãi mãi bắt đầu từ đây',
+      '05.jpg': 'Đêm của hội chị em!',
+      '06.jpg': 'Chúc mừng sinh nhật!',
+      '07.jpg': 'Tiệc tùng thôi!',
+      '08.jpg': 'Hội bạn xinh đẹp',
+      '09.jpg': 'Chuyến đi của hội anh em',
+      '10.jpg': 'Bữa tiệc tuyệt vời!',
+      '11.jpg': 'Đêm đáng nhớ',
+      '12.jpg': 'Khoảnh khắc hoàng hôn',
+      '13.jpg': 'Ước một điều đi!',
+      '14.jpg': 'Ngày của gia đình',
+      '15.jpg': 'Tài nghệ của bếp trưởng',
+      '16.jpg': 'Chúc ngon miệng!',
+      '17-clip.mp4': 'Cạn ly!',
+      '18-clip.mp4': 'Sài Gòn về đêm',
+      '19-clip.mp4': 'Du ngoạn sinh nhật',
+      '20-clip.mp4': 'Tiệc trắng!'
+    };
+    window.GALLERY_CAPTION_POOL = ['Kỷ niệm đẹp', 'Vui hết nấc', 'Một ngày tuyệt vời', 'Trên sông Sài Gòn'];
+  </script>
   <script src="assets/photos.js"></script>
   <script src="assets/site.js"></script>
 </body>

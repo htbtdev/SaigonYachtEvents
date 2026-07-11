@@ -442,6 +442,11 @@ a { text-decoration: none; color: inherit; }
   white-space: nowrap;
   overflow: hidden;
 }
+/* page vietnamienne : Dancing Script (Caveat n'a pas les diacritiques VI) */
+html[lang="vi"] .grid .cap {
+  font-family: "Dancing Script", cursive;
+  font-size: 21px;
+}
 /* badge lecture sur les vignettes vidéo */
 .grid a.is-video::after {
   content: '▶';
