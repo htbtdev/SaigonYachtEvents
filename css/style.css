@@ -545,6 +545,41 @@ html[lang="vi"] .grid .cap {
   background: transparent; /* le voile est géré par .lb-backdrop */
 }
 .lightbox.open { display: flex; }
+/* la scène : le grand polaroid + les bordures de la pile qui dépassent */
+.lb-stage { position: relative; }
+.lb-pile {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.lb-pile i {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  border-radius: 2px;
+  box-shadow: 0 16px 44px rgba(0, 0, 0, .38);
+}
+/* un rectangle grisé au dos : suggère la photo du polaroid d'en dessous */
+.lb-pile i::after {
+  content: '';
+  position: absolute;
+  inset: 14px 14px 58px;
+  background: #eceae5;
+}
+.lb-pile i:nth-child(1) { transform: rotate(8deg)   translate(30px, 16px); }
+.lb-pile i:nth-child(2) { transform: rotate(-11deg) translate(-34px, 8px); }
+.lb-pile i:nth-child(3) { transform: rotate(4.5deg) translate(-14px, -22px); }
+.lb-pile i:nth-child(4) { transform: rotate(-5deg)  translate(24px, -12px); }
+.lb-pile i:nth-child(5) { transform: rotate(14deg)  translate(-6px, 30px); }
+/* la pile apparaît juste après l'arrivée des polaroids volants */
+.lightbox.open .lb-pile i { opacity: 0; animation: lbPileIn .45s ease both; }
+.lightbox.open .lb-pile i:nth-child(1) { animation-delay: .30s; }
+.lightbox.open .lb-pile i:nth-child(2) { animation-delay: .36s; }
+.lightbox.open .lb-pile i:nth-child(3) { animation-delay: .42s; }
+.lightbox.open .lb-pile i:nth-child(4) { animation-delay: .48s; }
+.lightbox.open .lb-pile i:nth-child(5) { animation-delay: .54s; }
+@keyframes lbPileIn { from { opacity: 0; } to { opacity: 1; } }
+
 /* le grand polaroid sélectionné, au sommet de la pile */
 .lb-polaroid {
   position: relative;

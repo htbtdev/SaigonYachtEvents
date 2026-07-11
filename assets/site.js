@@ -174,10 +174,14 @@
     lb.innerHTML =
       '<button class="lb-close" aria-label="Fermer">&times;</button>' +
       '<button class="lb-prev" aria-label="Photo précédente">&#10094;</button>' +
-      '<div class="lb-polaroid">' +
-        '<img alt="saigonyachtevents" />' +
-        '<video controls playsinline style="display:none"></video>' +
-        '<span class="lb-cap"></span>' +
+      '<div class="lb-stage">' +
+        // bordures de la pile qui dépassent sous le polaroid sélectionné
+        '<div class="lb-pile"><i></i><i></i><i></i><i></i><i></i></div>' +
+        '<div class="lb-polaroid">' +
+          '<img alt="saigonyachtevents" />' +
+          '<video controls playsinline style="display:none"></video>' +
+          '<span class="lb-cap"></span>' +
+        '</div>' +
       '</div>' +
       '<button class="lb-next" aria-label="Photo suivante">&#10095;</button>' +
       '<div class="lb-counter"></div>';
