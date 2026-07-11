@@ -10,21 +10,21 @@ window.SITE_PHOTOS = {
     "assets/img/Page1/05.jpg"
   ],
   "gallery": [
-    "assets/img/Gallery/g01.jpg",
-    "assets/img/Gallery/g02.jpg",
-    "assets/img/Gallery/g03.jpg",
-    "assets/img/Gallery/g04.jpg",
-    "assets/img/Gallery/g05.jpg",
-    "assets/img/Gallery/g06.jpg",
-    "assets/img/Gallery/g07.jpg",
-    "assets/img/Gallery/g08.jpg",
-    "assets/img/Gallery/g09.jpg",
-    "assets/img/Gallery/g10.jpg",
-    "assets/img/Gallery/g11.jpg",
-    "assets/img/Gallery/g12.jpg",
-    "assets/img/Gallery/g13.jpg",
-    "assets/img/Gallery/g14.jpg",
-    "assets/img/Gallery/g15.jpg",
-    "assets/img/Gallery/g16.jpg"
+    "assets/img/Gallery/01.jpg",
+    "assets/img/Gallery/02.jpg",
+    "assets/img/Gallery/03.jpg",
+    "assets/img/Gallery/04.jpg",
+    "assets/img/Gallery/05.jpg",
+    "assets/img/Gallery/06.jpg",
+    "assets/img/Gallery/07.jpg",
+    "assets/img/Gallery/08.jpg",
+    "assets/img/Gallery/09.jpg",
+    "assets/img/Gallery/10.jpg",
+    "assets/img/Gallery/11.jpg",
+    "assets/img/Gallery/12.jpg",
+    "assets/img/Gallery/13.jpg",
+    "assets/img/Gallery/14.jpg",
+    "assets/img/Gallery/15.jpg",
+    "assets/img/Gallery/16.jpg"
   ]
 };
