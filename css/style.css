@@ -162,11 +162,42 @@ a { text-decoration: none; color: inherit; }
   from { opacity: 0; transform: translateY(26px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+/* le texte et le carrousel passent au-dessus des paillettes */
+.hero h1, .hero .stars, .hero-sub, .hero-lead, .collage {
+  position: relative;
+  z-index: 2;
+}
+
+/* paillettes flottantes (effet lanternes de la maquette) :
+   petites lueurs dorées qui montent lentement du bas du hero */
+.lights {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.light {
+  position: absolute;
+  bottom: -4vh;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(235, 211, 160, .9), rgba(235, 211, 160, 0) 70%);
+  animation: sparkleFloat linear infinite;
+  opacity: 0;
+}
+@keyframes sparkleFloat {
+  0%   { transform: translateY(0) translateX(0); opacity: 0; }
+  12%  { opacity: .75; }
+  85%  { opacity: .35; }
+  100% { transform: translateY(-108vh) translateX(4vw); opacity: 0; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hero h1, .hero .stars, .hero-sub, .hero-lead, .collage {
     animation: none;
     opacity: 1;
   }
+  .light { animation: none; display: none; }
 }
 
 /* hero collage — carrousel lent de cadres penchés (photos et clips vidéo)

@@ -124,6 +124,26 @@
     document.body.style.overflow = '';
   }
 
+  /* ---------- paillettes flottantes du hero (effet de la maquette) ---------- */
+  var hero = document.querySelector('.hero');
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (hero && !reduceMotion) {
+    var lights = document.createElement('div');
+    lights.className = 'lights';
+    for (var i = 0; i < 16; i++) {
+      var d = document.createElement('span');
+      d.className = 'light';
+      var s = 3 + Math.random() * 7;                          // taille 3-10 px
+      d.style.width = s + 'px';
+      d.style.height = s + 'px';
+      d.style.left = (Math.random() * 100) + '%';             // position horizontale
+      d.style.animationDuration = (9 + Math.random() * 12) + 's'; // montée 9-21 s
+      d.style.animationDelay = (Math.random() * 10) + 's';    // départs étalés
+      lights.appendChild(d);
+    }
+    hero.insertBefore(lights, hero.firstChild);
+  }
+
   /* ---------- menu déroulant de langue ---------- */
   var lang = document.getElementById('lang');
   var btn = lang.querySelector('.lang-btn');
