@@ -127,7 +127,13 @@ a { text-decoration: none; color: inherit; }
   font-size: clamp(40px, 7vw, 72px);
   letter-spacing: -0.5px;
 }
-.stars { font-size: 16px; letter-spacing: 3px; margin: 6px 0 18px; color: #fff; }
+.stars {
+  font-size: 16px;
+  letter-spacing: 3px;
+  margin: 6px 0 18px;
+  color: #D9B36C; /* or de la maquette */
+  text-shadow: 0 0 12px rgba(235, 211, 160, .45); /* léger halo doré */
+}
 .hero-sub {
   font-family: var(--font-base);
   font-weight: 700;
