@@ -10,8 +10,7 @@ window.SITE_PHOTOS = {
     "assets/img/Page1/05.jpg",
     "assets/img/Page1/06-clip.mp4",
     "assets/img/Page1/07.jpg",
-    "assets/img/Page1/08-clip.mp4",
-    "assets/img/Page1/09.jpg"
+    "assets/img/Page1/08-clip.mp4"
   ],
   "gallery": [
     "assets/img/Gallery/01.jpg",
