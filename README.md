@@ -27,14 +27,17 @@ Reproduction fidèle du site original en HTML/CSS statique, sans dépendance à 
 └── site original/        # Copie du site d'origine (référence)
 ```
 
-## Ajouter / changer des photos
+## Ajouter / changer des photos et vidéos
 
 Les deux langues (EN et VI) utilisent **les mêmes photos**.
 
-- **Première page (cadres penchés)** : déposer les photos dans `assets/img/Page1/`
-  (affichées par ordre alphabétique — nommer `01.jpg`, `02.jpg`… pour contrôler l'ordre)
+- **Première page (carrousel de cadres penchés)** : déposer photos **et clips vidéo**
+  (`.mp4` / `.webm`) dans `assets/img/Page1/` — défilement lent en boucle, pause au
+  survol ; les vidéos jouent en boucle, sans son. Affichage par ordre alphabétique
+  (nommer `01.jpg`, `02.jpg`… pour contrôler l'ordre).
+  Conseil vidéo : clips courts (10-30 s), format portrait, compressés (quelques Mo).
 - **Galerie** : déposer les photos dans `assets/img/Gallery/` — **tout** le contenu
-  du dossier est affiché automatiquement
+  du dossier est affiché automatiquement (avec visionneuse au clic)
 - Puis **double-cliquer sur `update-photos.bat`** (régénère la liste `assets/photos.js`)
   et pousser sur git
 

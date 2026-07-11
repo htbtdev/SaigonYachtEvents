@@ -143,24 +143,42 @@ a { text-decoration: none; color: inherit; }
   margin: 0 auto;
 }
 
-/* hero collage — photos masquées en parallélogramme comme l'original
+/* hero collage — carrousel lent de cadres penchés (photos et clips vidéo)
+   masqués en parallélogramme comme l'original
    (mask SVG : M148 0 H0 L52 200 H200 Z sur viewBox 200x200) */
 .collage {
   margin-top: 48px;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  width: 100%;
+  overflow: hidden;
 }
-.collage img {
+.collage-track {
+  display: flex;
+  align-items: flex-start;
+  width: max-content;
+  animation: collage-scroll 70s linear infinite; /* durée recalculée en JS */
+  will-change: transform;
+}
+.collage:hover .collage-track { animation-play-state: paused; } /* pause au survol */
+.collage-track img,
+.collage-track video {
   width: clamp(180px, 21.24vw, 306px);
   aspect-ratio: 260 / 320;
   height: auto;
   object-fit: cover;
-  margin-left: -26px;
+  margin-left: -26px; /* uniforme sur tous les éléments : les 2 jeux ont la même largeur */
   clip-path: polygon(0% 0%, 74% 0%, 100% 100%, 26% 100%);
+  flex-shrink: 0;
 }
-.collage img:first-child { margin-left: 0; }
-.collage img:nth-child(even) { margin-top: 24px; }
+.collage-track img:nth-child(even),
+.collage-track video:nth-child(even) { margin-top: 24px; }
+/* la piste contient 2 jeux identiques : -50 % = exactement un jeu → boucle invisible */
+@keyframes collage-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .collage-track { animation: none; }
+}
 
 /* ---------------- Services ---------------- */
 .services {
@@ -319,9 +337,8 @@ a { text-decoration: none; color: inherit; }
 @media (max-width: 900px) {
   .cards { grid-template-columns: 1fr; max-width: 420px; }
   .grid { grid-template-columns: repeat(2, 1fr); }
-  .collage { flex-wrap: wrap; gap: 10px; }
-  .collage img { width: 44%; height: auto; aspect-ratio: 260/320; margin-left: 0; }
-  .collage img:nth-child(even) { margin-top: 0; }
+  .collage-track img,
+  .collage-track video { width: 44vw; }
 }
 @media (max-width: 620px) {
   .site-header { flex-direction: column; gap: 14px; padding: 14px 16px; }

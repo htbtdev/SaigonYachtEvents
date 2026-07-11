@@ -6,20 +6,21 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.join(__dirname, '..');
-const EXT = /\.(jpe?g|png|webp|avif|gif)$/i;
+const IMG = /\.(jpe?g|png|webp|avif|gif)$/i;
+const MEDIA = /\.(jpe?g|png|webp|avif|gif|mp4|webm)$/i; // Page1 accepte aussi les vidéos
 
-function list(dir) {
+function list(dir, re) {
   const abs = path.join(ROOT, 'assets', 'img', dir);
   if (!fs.existsSync(abs)) return [];
   return fs.readdirSync(abs)
-    .filter(f => EXT.test(f))
+    .filter(f => re.test(f))
     .sort()
     .map(f => 'assets/img/' + dir + '/' + f);
 }
 
 const data = {
-  page1: list('Page1'),     // cadres penchés de la première page
-  gallery: list('Gallery'), // grille de la galerie
+  page1: list('Page1', MEDIA),  // cadres penchés (photos + clips vidéo mp4/webm)
+  gallery: list('Gallery', IMG), // grille de la galerie
 };
 
 const out =

@@ -3,13 +3,51 @@
 (function () {
   var P = window.SITE_PHOTOS || { page1: [], gallery: [] };
 
-  /* ---------- photos dynamiques : Page1 (collage) ---------- */
-  var collage = document.querySelector('.collage');
-  P.page1.forEach(function (src) {
+  /* ---------- Page1 : carrousel lent des cadres penchés ----------
+     Photos ET clips vidéo (mp4/webm) — les vidéos jouent en boucle, sans son. */
+  function makeMedia(src) {
+    if (/\.(mp4|webm)$/i.test(src)) {
+      var v = document.createElement('video');
+      v.src = src;
+      v.muted = true; v.loop = true; v.autoplay = true;
+      v.setAttribute('muted', '');          // nécessaire pour l'autoplay mobile
+      v.setAttribute('playsinline', '');    // pas de plein écran forcé sur iOS
+      v.preload = 'auto';
+      // relance la lecture dès que la vidéo est prête (l'autoplay seul est parfois ignoré)
+      v.addEventListener('canplay', function () {
+        if (v.paused) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+      });
+      return v;
+    }
     var img = document.createElement('img');
     img.src = src; img.alt = 'saigonyachtevents'; img.loading = 'lazy';
-    collage.appendChild(img);
-  });
+    return img;
+  }
+
+  var collage = document.querySelector('.collage');
+  if (collage && P.page1.length) {
+    // nombre pair d'éléments pour que le décalage haut/bas reste cohérent à la boucle
+    var set = P.page1.length % 2 ? P.page1.concat(P.page1) : P.page1;
+    var track = document.createElement('div');
+    track.className = 'collage-track';
+    // deux jeux identiques à la suite : quand le premier est sorti de l'écran,
+    // on est exactement au début du second → boucle invisible
+    set.concat(set).forEach(function (src) { track.appendChild(makeMedia(src)); });
+    track.style.animationDuration = (set.length * 7) + 's'; // ~7 s par visuel
+    collage.appendChild(track);
+    // certains navigateurs ignorent l'attribut autoplay : on force la lecture,
+    // et on relance quand l'onglet redevient visible (Chrome met en pause les
+    // vidéos des pages masquées)
+    var playAll = function () {
+      track.querySelectorAll('video').forEach(function (v) {
+        if (v.paused) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+      });
+    };
+    playAll();
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'visible') playAll();
+    });
+  }
 
   /* ---------- photos dynamiques : Gallery (grille) ---------- */
   var grid = document.querySelector('.grid');
