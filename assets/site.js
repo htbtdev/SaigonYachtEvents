@@ -184,6 +184,22 @@
   });
   document.addEventListener('click', function () { lang.classList.remove('open'); });
 
+  /* ---------- apparition au scroll (reveal du proto3) ---------- */
+  var revealEls = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window && !reduceMotion) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: .15 });
+    revealEls.forEach(function (el) { io.observe(el); });
+  } else {
+    revealEls.forEach(function (el) { el.classList.add('in'); });
+  }
+
   /* ---------- header opaque au scroll (comme l'original) ---------- */
   var header = document.querySelector('.site-header');
   function onScroll() { header.classList.toggle('scrolled', window.scrollY > 8); }

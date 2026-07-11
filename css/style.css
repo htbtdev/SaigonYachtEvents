@@ -13,6 +13,11 @@
   --font-base: "Nunito Sans", sans-serif;   /* texte — police du proto3 */
   --font-body: "Nunito Sans", sans-serif;
   --maxw: 1200px;
+  /* palette du proto3 */
+  --proto-ink: #20242A;
+  --proto-grey: #6B7280;
+  --proto-gold: #C9A96A;
+  --proto-off: #FAFAF8;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -243,65 +248,125 @@ a { text-decoration: none; color: inherit; }
   .collage-track { animation: none; }
 }
 
-/* ---------------- Services ---------------- */
+/* ---------------- Services (style du proto3) ---------------- */
 .services {
-  background: var(--services-bg);
-  color: var(--white);
-  padding: 90px 20px 100px;
+  background: #fff;
+  color: var(--proto-ink);
+  padding: 96px 5vw;
   text-align: center;
 }
 .section-title {
   font-family: var(--font-head);
   font-weight: 500;
   font-size: clamp(34px, 5vw, 48px);
+  line-height: 1.15;
 }
-.services .section-title { color: #fff; }
+.services .section-title { color: var(--proto-ink); }
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: .36em;
+  text-transform: uppercase;
+  color: var(--proto-gold);
+  font-weight: 600;
+  display: block;
+  margin-bottom: 14px;
+}
+.section-rule {
+  width: 56px;
+  height: 1px;
+  background: var(--proto-gold);
+  margin: 22px auto 0;
+}
 .section-intro {
   font-family: var(--font-body);
   font-size: 16px;
   line-height: 1.6;
   max-width: 640px;
-  margin: 18px auto 56px;
-  color: var(--text-muted-dark);
+  margin: 14px auto 0;
+  color: var(--proto-grey);
 }
 .cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 34px;
+  gap: 30px;
   max-width: var(--maxw);
-  margin: 0 auto;
+  margin: 60px auto 0;
 }
 .card { text-align: center; }
-.card img {
-  width: 100%;
-  aspect-ratio: 400 / 304;
-  object-fit: cover;
-  border-radius: 4px;
+/* photo : zoom lent + cadre doré intérieur au survol */
+.card .ph {
+  overflow: hidden;
+  border-radius: 2px;
+  margin-bottom: 22px;
+  position: relative;
 }
+.card .ph img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  transition: transform .8s cubic-bezier(.2, .7, .2, 1);
+}
+.card:hover .ph img { transform: scale(1.06); }
+.card .ph::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(201, 169, 106, 0);
+  transition: all .5s ease;
+}
+.card:hover .ph::after {
+  inset: 10px;
+  border-color: rgba(201, 169, 106, .7);
+}
+/* titre : soulignement doré qui s'étire au survol */
 .card h3 {
   font-family: var(--font-head);
   font-weight: 500;
-  font-size: 18px;
-  color: #fff;
-  margin: 22px 0 10px;
+  font-size: 22px;
+  color: var(--proto-ink);
+  margin-bottom: 8px;
 }
+.card h3::after {
+  content: '';
+  display: block;
+  width: 34px;
+  height: 1px;
+  background: var(--proto-gold);
+  margin: 12px auto 0;
+  transition: width .4s ease;
+}
+.card:hover h3::after { width: 64px; }
 .card p {
   font-family: var(--font-body);
-  font-size: 16px;
-  line-height: 1.55;
-  color: var(--text-muted-dark);
-  max-width: 320px;
-  margin: 0 auto;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--proto-grey);
+  max-width: 330px;
+  margin: 12px auto 0;
+}
+
+/* apparition au scroll (reveal du proto3) */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity .85s ease, transform .85s ease;
+}
+.reveal.in { opacity: 1; transform: translateY(0); }
+.reveal.d1 { transition-delay: .12s; }
+.reveal.d2 { transition-delay: .24s; }
+.reveal.d3 { transition-delay: .36s; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
 }
 
 /* ---------------- Gallery ---------------- */
 .gallery {
-  background: #fff;
+  background: var(--proto-off); /* blanc cassé du proto3 */
   padding: 90px 20px 100px;
   text-align: center;
 }
-.gallery .section-title { color: var(--dark); }
-.gallery .section-intro { color: var(--text-muted); }
+.gallery .section-title { color: var(--proto-ink); }
+.gallery .section-intro { color: var(--proto-grey); margin-bottom: 56px; }
 .grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
