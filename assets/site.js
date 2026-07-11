@@ -231,6 +231,24 @@
     hero.insertBefore(lights, hero.firstChild);
   }
 
+  /* ---------- menu mobile (hamburger) ---------- */
+  var navToggle = document.querySelector('.nav-toggle');
+  var siteHeader = document.querySelector('.site-header');
+  if (navToggle && siteHeader) {
+    navToggle.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var open = siteHeader.classList.toggle('menu-open');
+      navToggle.classList.toggle('open', open);
+      navToggle.setAttribute('aria-expanded', open);
+    });
+    // clic ailleurs sur la page → le menu se referme
+    document.addEventListener('click', function () {
+      siteHeader.classList.remove('menu-open');
+      navToggle.classList.remove('open');
+      navToggle.setAttribute('aria-expanded', 'false');
+    });
+  }
+
   /* ---------- menu déroulant de langue ---------- */
   var lang = document.getElementById('lang');
   var btn = lang.querySelector('.lang-btn');
