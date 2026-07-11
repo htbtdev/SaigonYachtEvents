@@ -48,26 +48,9 @@ a { text-decoration: none; color: inherit; }
   box-shadow: 0 6px 14px rgba(0, 0, 0, .1);
 }
 
-.brand { position: relative; display: block; line-height: 0; }
+/* le PNG du logo contient déjà l'avatar, le nom, le numéro et les icônes */
+.brand { display: block; line-height: 0; }
 .brand-img { height: 82px; width: auto; }
-.brand-name {
-  position: absolute;
-  top: 50%;
-  left: 27%;
-  right: 34%;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  line-height: 1.2;
-  color: var(--dark);
-  font-family: var(--font-base);
-  white-space: nowrap;
-  pointer-events: none;
-}
-.brand-name strong { font-size: 17px; font-weight: 500; }
-.brand-name span { font-size: 15px; }
 
 .main-nav { display: flex; align-items: center; gap: 26px; }
 .main-nav a { color: var(--white); font-family: var(--font-body); font-size: 16px; font-weight: 500; }
@@ -288,8 +271,6 @@ a { text-decoration: none; color: inherit; }
 @media (max-width: 620px) {
   .site-header { flex-direction: column; gap: 14px; padding: 14px 16px; }
   .brand-img { height: 66px; }
-  .brand-name strong { font-size: 13px; }
-  .brand-name span { font-size: 12px; }
   .main-nav { gap: 18px; }
   .hero { padding-top: 210px; }
   .site-footer { flex-direction: column; text-align: center; padding: 32px 20px; }
