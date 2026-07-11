@@ -3,6 +3,13 @@
 (function () {
   var P = window.SITE_PHOTOS || { page1: [], gallery: [] };
 
+  /* ---------- rechargement toujours en haut de page ----------
+     Chrome restaure la position de scroll au F5, mais comme le carrousel
+     est construit en JS et que les polices chargent après, la position
+     restaurée tombe à côté (léger scroll parasite). On désactive. */
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.scrollTo(0, 0);
+
   /* ---------- Page1 : carrousel lent des cadres penchés ----------
      Photos ET clips vidéo (mp4/webm) — les vidéos jouent en boucle, sans son. */
   function makeMedia(src) {
@@ -32,7 +39,13 @@
     track.className = 'collage-track';
     // deux jeux identiques à la suite : quand le premier est sorti de l'écran,
     // on est exactement au début du second → boucle invisible
-    set.concat(set).forEach(function (src) { track.appendChild(makeMedia(src)); });
+    set.concat(set).forEach(function (src, idx) {
+      var el = makeMedia(src);
+      // apparition progressive : un cadre toutes les 0,65 s après le texte,
+      // pour laisser le temps d'admirer le fond
+      el.style.animationDelay = (1.2 + (idx % set.length) * 0.65).toFixed(2) + 's';
+      track.appendChild(el);
+    });
     track.style.animationDuration = (set.length * 7) + 's'; // ~7 s par visuel
     collage.appendChild(track);
     // certains navigateurs ignorent l'attribut autoplay : on force la lecture,

@@ -159,8 +159,7 @@ a { text-decoration: none; color: inherit; }
 .hero h1,
 .hero .stars,
 .hero-sub,
-.hero-lead,
-.collage {
+.hero-lead {
   opacity: 0;
   animation: riseIn 1.1s ease forwards;
 }
@@ -168,7 +167,13 @@ a { text-decoration: none; color: inherit; }
 .hero .stars { animation-delay: .55s; }
 .hero-sub    { animation-delay: .75s; }
 .hero-lead   { animation-delay: .95s; }
-.collage     { animation-delay: 1.2s; }
+/* les cadres penchés apparaissent un à un (délai posé en JS),
+   le temps d'admirer le fond */
+.collage-track img,
+.collage-track video {
+  opacity: 0;
+  animation: riseIn .9s ease forwards;
+}
 @keyframes riseIn {
   from { opacity: 0; transform: translateY(26px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -204,7 +209,8 @@ a { text-decoration: none; color: inherit; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero h1, .hero .stars, .hero-sub, .hero-lead, .collage {
+  .hero h1, .hero .stars, .hero-sub, .hero-lead,
+  .collage-track img, .collage-track video {
     animation: none;
     opacity: 1;
   }
