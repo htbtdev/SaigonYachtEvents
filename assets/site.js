@@ -52,6 +52,33 @@
   /* ---------- Gallery (grille) : photos + vidéos ---------- */
   function isVideo(src) { return /\.(mp4|webm)$/i.test(src); }
 
+  /* Légendes manuscrites des polaroids — modifiez librement ici.
+     Clé = nom du fichier dans assets/img/Gallery. Les fichiers sans
+     légende reçoivent une phrase de la réserve ci-dessous. */
+  var CAPTIONS = {
+    '01.jpg': 'Love is in the air',
+    '02.jpg': 'She said yes!',
+    '03.jpg': 'Just the two of us',
+    '04.jpg': 'Forever starts here',
+    '05.jpg': 'Girls night!',
+    '06.jpg': 'Happy birthday!',
+    '07.jpg': 'Party time!',
+    '08.jpg': 'Glam squad',
+    '09.jpg': 'Boys trip',
+    '10.jpg': 'What a party!',
+    '11.jpg': 'Night to remember',
+    '12.jpg': 'Golden hour',
+    '13.jpg': 'Make a wish!',
+    '14.jpg': 'Family day',
+    '15.jpg': "Chef's magic",
+    '16.jpg': 'Bon appétit!',
+    '17-clip.mp4': 'Cheers!',
+    '18-clip.mp4': 'Saigon by night',
+    '19-clip.mp4': 'Birthday cruise',
+    '20-clip.mp4': 'White party!'
+  };
+  var CAPTION_POOL = ['Memories', 'Good vibes', 'What a day!', 'On the river'];
+
   var DELAYS = ['', 'd1', 'd2', 'd3']; // apparition en cascade, comme le proto
   var grid = document.querySelector('.grid');
   P.gallery.forEach(function (src, i) {
@@ -73,6 +100,12 @@
       img.src = src; img.alt = 'saigonyachtevents'; img.loading = 'lazy';
       a.appendChild(img);
     }
+    // légende manuscrite du polaroid
+    var name = src.split('/').pop();
+    var cap = document.createElement('span');
+    cap.className = 'cap';
+    cap.textContent = CAPTIONS[name] || CAPTION_POOL[i % CAPTION_POOL.length];
+    a.appendChild(cap);
     grid.appendChild(a);
   });
 
