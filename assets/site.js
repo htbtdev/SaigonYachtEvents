@@ -131,22 +131,60 @@
     grid.appendChild(a);
   });
 
-  /* ---------- lightbox (fermer, précédente/suivante) ---------- */
-  var lb = null, lbImg, lbVideo, lbCounter, current = 0;
+  /* ---------- lightbox polaroid (pile + étalage) ---------- */
+  var lb = null, lbBackdrop, lbImg, lbVideo, lbCap, lbCounter, current = 0;
+
+  function captionFor(src, i) {
+    return CAPTIONS[src.split('/').pop()] || CAPTION_POOL[i % CAPTION_POOL.length];
+  }
+
+  // au clic : tous les polaroids de la grille volent vers le centre → pile
+  function pileUp() {
+    if (reduceMotion) return;
+    var cx = window.innerWidth / 2, cy = window.innerHeight / 2;
+    grid.querySelectorAll('a').forEach(function (el, k) {
+      var r = el.getBoundingClientRect();
+      el.classList.add('in');      // même les vignettes pas encore révélées rejoignent la pile
+      el.classList.add('piling');
+      el.style.zIndex = 90;        // au-dessus du voile (80), sous le grand polaroid (100)
+      el.style.transform = 'translate(' +
+        (cx - (r.left + r.width / 2)).toFixed(0) + 'px,' +
+        (cy - (r.top + r.height / 2)).toFixed(0) + 'px) ' +
+        'rotate(' + (rnd(k + 61) * 24 - 12).toFixed(1) + 'deg) scale(.55)';
+    });
+  }
+
+  // à la fermeture : la pile s'éparpille, chacun retourne à sa place
+  function spreadOut() {
+    grid.querySelectorAll('a').forEach(function (el) {
+      el.style.transform = ''; // retour à la rotation/décalage CSS d'origine
+      setTimeout(function () {
+        el.classList.remove('piling');
+        el.style.zIndex = '';
+      }, 700);
+    });
+  }
 
   function build() {
+    lbBackdrop = document.createElement('div');
+    lbBackdrop.className = 'lb-backdrop';
+    document.body.appendChild(lbBackdrop);
     lb = document.createElement('div');
     lb.className = 'lightbox';
     lb.innerHTML =
       '<button class="lb-close" aria-label="Fermer">&times;</button>' +
       '<button class="lb-prev" aria-label="Photo précédente">&#10094;</button>' +
-      '<img alt="saigonyachtevents" />' +
-      '<video controls playsinline style="display:none"></video>' +
+      '<div class="lb-polaroid">' +
+        '<img alt="saigonyachtevents" />' +
+        '<video controls playsinline style="display:none"></video>' +
+        '<span class="lb-cap"></span>' +
+      '</div>' +
       '<button class="lb-next" aria-label="Photo suivante">&#10095;</button>' +
       '<div class="lb-counter"></div>';
     document.body.appendChild(lb);
     lbImg = lb.querySelector('img');
     lbVideo = lb.querySelector('video');
+    lbCap = lb.querySelector('.lb-cap');
     lbCounter = lb.querySelector('.lb-counter');
 
     lb.querySelector('.lb-close').addEventListener('click', close);
@@ -195,12 +233,15 @@
       lbImg.style.display = '';
       lbImg.src = src;
     }
+    lbCap.textContent = captionFor(src, current); // la légende manuscrite suit
     lbCounter.textContent = (current + 1) + ' / ' + n;
   }
 
   function openLightbox(i) {
     if (!lb) build();
     show(i);
+    pileUp(); // les autres polaroids se rassemblent en pile
+    lbBackdrop.classList.add('open');
     lb.classList.add('open');
     document.body.style.overflow = 'hidden'; // bloque le scroll derrière
   }
@@ -208,6 +249,8 @@
   function close() {
     lbVideo.pause(); // coupe la lecture en quittant la visionneuse
     lb.classList.remove('open');
+    lbBackdrop.classList.remove('open');
+    spreadOut(); // la pile s'éparpille, chaque polaroid retourne à sa place
     document.body.style.overflow = '';
   }
 

@@ -525,6 +525,16 @@ html[lang="vi"] .grid .cap {
 .grid a.is-video:hover::after { background: rgba(13, 19, 26, .8); }
 
 /* ---------------- Lightbox galerie ---------------- */
+/* voile sombre séparé, placé SOUS la pile de polaroids (z 80 < 90 < 100) */
+.lb-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: rgba(10, 12, 16, .88);
+  display: none;
+}
+.lb-backdrop.open { display: block; }
+
 .lightbox {
   position: fixed;
   inset: 0;
@@ -532,15 +542,48 @@ html[lang="vi"] .grid .cap {
   display: none;
   align-items: center;
   justify-content: center;
-  background: rgba(10, 12, 16, .93);
+  background: transparent; /* le voile est géré par .lb-backdrop */
 }
 .lightbox.open { display: flex; }
-.lightbox img,
-.lightbox video {
-  max-width: 88vw;
-  max-height: 86vh;
-  border-radius: 4px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, .5);
+/* le grand polaroid sélectionné, au sommet de la pile */
+.lb-polaroid {
+  position: relative;
+  background: #fff;
+  padding: 16px 16px 72px;
+  border-radius: 2px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, .55);
+  transform: rotate(-1.6deg);
+}
+.lightbox.open .lb-polaroid { animation: lbPop .5s ease .25s both; }
+@keyframes lbPop {
+  from { opacity: 0; transform: rotate(6deg) scale(.55); }
+  to   { opacity: 1; transform: rotate(-1.6deg) scale(1); }
+}
+.lb-polaroid img,
+.lb-polaroid video {
+  display: block;
+  max-width: min(76vw, 640px);
+  max-height: 60vh;
+}
+.lb-cap {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  text-align: center;
+  font-family: "Caveat", cursive;
+  font-size: 32px;
+  font-weight: 500;
+  color: #3d4148;
+  transform: rotate(-1deg);
+  white-space: nowrap;
+  overflow: hidden;
+}
+html[lang="vi"] .lb-cap { font-family: "Dancing Script", cursive; font-size: 25px; }
+
+/* formation de la pile : les polaroids de la grille volent vers le centre */
+.grid a.piling {
+  transition: transform .65s cubic-bezier(.4, .1, .2, 1);
 }
 .lightbox button {
   position: absolute;
