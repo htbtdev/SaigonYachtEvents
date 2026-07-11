@@ -4,11 +4,14 @@
 window.SITE_PHOTOS = {
   "page1": [
     "assets/img/Page1/01.jpg",
-    "assets/img/Page1/02.jpg",
+    "assets/img/Page1/02-clip.mp4",
     "assets/img/Page1/03.jpg",
-    "assets/img/Page1/04.jpg",
+    "assets/img/Page1/04-clip.mp4",
     "assets/img/Page1/05.jpg",
-    "assets/img/Page1/06-clip.mp4"
+    "assets/img/Page1/06-clip.mp4",
+    "assets/img/Page1/07.jpg",
+    "assets/img/Page1/08-clip.mp4",
+    "assets/img/Page1/09.jpg"
   ],
   "gallery": [
     "assets/img/Gallery/01.jpg",
