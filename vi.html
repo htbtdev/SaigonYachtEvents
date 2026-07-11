@@ -50,13 +50,8 @@
       sự kiện khuyến mãi hay chuyến đi chơi cùng gia đình và bạn bè trên sông Sài Gòn
     </p>
 
-    <div class="collage">
-      <img src="assets/img/hero-1.jpg" alt="night saigonyachtevents" loading="lazy" />
-      <img src="assets/img/hero-2.jpg" alt="Birthday saigonyachtevents" loading="lazy" />
-      <img src="assets/img/hero-3.jpg" alt="marriage proposal" loading="lazy" />
-      <img src="assets/img/hero-4.jpg" alt="party saigonyachtevents" loading="lazy" />
-      <img src="assets/img/hero-5.jpg" alt="party saigonyachtevents" loading="lazy" />
-    </div>
+    <!-- rempli automatiquement depuis assets/img/Page1 (voir photos.js) -->
+    <div class="collage"></div>
   </section>
 
   <!-- ===================== Services ===================== -->
@@ -66,17 +61,17 @@
 
     <div class="cards">
       <article class="card">
-        <img src="assets/img/service-decoration.jpg" alt="birthday yacht Saigon River" loading="lazy" />
+        <img src="assets/img/Services/decoration.jpg" alt="birthday yacht Saigon River" loading="lazy" />
         <h3>Trang trí</h3>
         <p>Cá nhân hóa sự kiện của bạn với đồ trang trí trang nhã và phù hợp với chủ đề</p>
       </article>
       <article class="card">
-        <img src="assets/img/service-food.jpg" alt="Food on saigonyachtevents" loading="lazy" />
+        <img src="assets/img/Services/food.jpg" alt="Food on saigonyachtevents" loading="lazy" />
         <h3>Thực phẩm và đồ uống</h3>
         <p>Thưởng thức những món ăn ngon và đồ uống tinh tế được chế biến bởi các đầu bếp và nhân viên pha chế giàu kinh nghiệm của chúng tôi</p>
       </article>
       <article class="card">
-        <img src="assets/img/service-special.jpg" alt="party saigonyachtevents" loading="lazy" />
+        <img src="assets/img/Services/special.jpg" alt="party saigonyachtevents" loading="lazy" />
         <h3>Yêu cầu đặc biệt</h3>
         <p>Mọi yêu cầu đặc biệt sẽ được xem xét để cung cấp cho bạn trải nghiệm phù hợp</p>
       </article>
@@ -92,24 +87,8 @@
       cảm xúc và những kỷ niệm khó quên.
     </p>
 
-    <div class="grid">
-      <a href="assets/img/gallery/g01.jpg" target="_blank" rel="noopener"><img src="assets/img/gallery/g01.jpg" alt="saigonyachtevents" loading="lazy" /></a>
-      <a href="assets/img/gallery/g02.jpg" target="_blank" rel="noopener"><img src="assets/img/gallery/g02.jpg" alt="marriage proposal" loading="lazy" /></a>
-      <a href="assets/img/gallery/g03.jpg" target="_blank" rel="noopener"><img src="assets/img/gallery/g03.jpg" alt="saigonyachtevents" loading="lazy" /></a>
-      <a href="assets/img/gallery/g04.jpg" target="_blank" rel="noopener"><img src="assets/img/gallery/g04.jpg" alt="saigonyachtevents" loading="lazy" /></a>
-      <a href="assets/img/gallery/g05.jpg" target="_blank" rel="noopener"><img src="assets/img/gallery/g05.jpg" alt="party saigonyachtevents" loading="lazy" /></a>
-      <a href="assets/img/gallery/g06.jpg" target="_blank" rel="noopener"><img src="assets/img/gallery/g06.jpg" alt="birthday yacht Saigon River" loading="lazy" /></a>
-      <a href="assets/img/gallery/g07.jpg" target="_blank" rel="noopener"><img src="assets/img/gallery/g07.jpg" alt="birthday yacht Saigon River" loading="lazy" /></a>
-      <a href="assets/img/gallery/g08.jpg" target="_blank" rel="noopener"><img src="assets/img/gallery/g08.jpg" alt="birthday yacht Saigon River" loading="lazy" /></a>
-      <a href="assets/img/gallery/g09.jpg" target="_blank" rel="noopener"><img src="assets/img/gallery/g09.jpg" alt="friends saigonyachtevents" loading="lazy" /></a>
-      <a href="assets/img/gallery/g10.jpg" target="_blank" rel="noopener"><img src="assets/img/gallery/g10.jpg" alt="party saigonyachtevents" loading="lazy" /></a>
-      <a href="assets/img/gallery/g11.jpg" target="_blank" rel="noopener"><img src="assets/img/gallery/g11.jpg" alt="party saigonyachtevents" loading="lazy" /></a>
-      <a href="assets/img/gallery/g12.jpg" target="_blank" rel="noopener"><img src="assets/img/gallery/g12.jpg" alt="models saigonyachtevents" loading="lazy" /></a>
-      <a href="assets/img/gallery/g13.jpg" target="_blank" rel="noopener"><img src="assets/img/gallery/g13.jpg" alt="birthday saigonyachtevents" loading="lazy" /></a>
-      <a href="assets/img/gallery/g14.jpg" target="_blank" rel="noopener"><img src="assets/img/gallery/g14.jpg" alt="birthday saigonyachtevents" loading="lazy" /></a>
-      <a href="assets/img/gallery/g15.jpg" target="_blank" rel="noopener"><img src="assets/img/gallery/g15.jpg" alt="food saigonyachtevents" loading="lazy" /></a>
-      <a href="assets/img/gallery/g16.jpg" target="_blank" rel="noopener"><img src="assets/img/gallery/g16.jpg" alt="party saigonyachtevents" loading="lazy" /></a>
-    </div>
+    <!-- remplie automatiquement depuis assets/img/Gallery (voir photos.js) -->
+    <div class="grid"></div>
   </section>
 
   <!-- ===================== Contact / Footer ===================== -->
@@ -124,7 +103,27 @@
     </a>
   </footer>
 
+  <script src="assets/photos.js"></script>
   <script>
+    // photos dynamiques : affiche tout le contenu des dossiers Page1 et Gallery
+    (function () {
+      var P = window.SITE_PHOTOS || { page1: [], gallery: [] };
+      var collage = document.querySelector('.collage');
+      P.page1.forEach(function (src) {
+        var img = document.createElement('img');
+        img.src = src; img.alt = 'saigonyachtevents'; img.loading = 'lazy';
+        collage.appendChild(img);
+      });
+      var grid = document.querySelector('.grid');
+      P.gallery.forEach(function (src) {
+        var a = document.createElement('a');
+        a.href = src; a.target = '_blank'; a.rel = 'noopener';
+        var img = document.createElement('img');
+        img.src = src; img.alt = 'saigonyachtevents'; img.loading = 'lazy';
+        a.appendChild(img);
+        grid.appendChild(a);
+      });
+    })();
     (function () {
       var lang = document.getElementById('lang');
       var btn = lang.querySelector('.lang-btn');
