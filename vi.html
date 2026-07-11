@@ -116,17 +116,16 @@
     </div>
   </section>
 
-  <!-- ===================== Contact ===================== -->
-  <section class="contact" id="contact">
-    <h2>Liên hệ</h2>
+  <!-- ===================== Contact / Footer ===================== -->
+  <footer class="site-footer" id="contact">
+    <h5>Liên hệ</h5>
     <a class="contact-link" href="mailto:contact@saigonyachtevents.com">
       <img src="assets/img/email.png" alt="email saigonyachtevents" />
       contact@saigonyachtevents.com
     </a>
-  </section>
-
-  <footer class="site-footer">
-    © <span id="year"></span> Saigon Yacht Events — Thuê Du Thuyền Cao Cấp Tại Thành Phố Hồ Chí Minh
+    <a class="fb" href="https://www.facebook.com/nhu.nhongnheo.965" target="_blank" rel="noopener" aria-label="Facebook">
+      <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="20" fill="#fff"/><path d="M23.4 21.1l.55-3.6h-3.45v-2.34c0-.98.48-1.94 2.02-1.94h1.57V10.2s-1.43-.24-2.79-.24c-2.85 0-4.71 1.72-4.71 4.84v2.74H13.4v3.6h3.18V29.8h3.92v-8.7h2.9z" fill="#0f0a14"/></svg>
+    </a>
   </footer>
 
   <script>
@@ -140,7 +139,13 @@
       });
       document.addEventListener('click', function () { lang.classList.remove('open'); });
     })();
-    document.getElementById('year').textContent = new Date().getFullYear();
+    // header opaque au scroll (comme l'original)
+    (function () {
+      var header = document.querySelector('.site-header');
+      function onScroll() { header.classList.toggle('scrolled', window.scrollY > 8); }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+    })();
   </script>
 </body>
 </html>
