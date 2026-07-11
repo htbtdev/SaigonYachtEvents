@@ -89,9 +89,9 @@
     a.href = src;
     a.className = ('reveal ' + DELAYS[i % 4]).trim();
     // désordre naturel : chaque polaroid a sa rotation et ses décalages propres
-    a.style.setProperty('--rot', (rnd(i + 1) * 9 - 4.5).toFixed(2) + 'deg');   // -4,5° à +4,5°
-    a.style.setProperty('--ty',  (rnd(i + 13) * 26 - 13).toFixed(1) + 'px');   // -13 à +13 px
-    a.style.setProperty('--tx',  (rnd(i + 29) * 16 - 8).toFixed(1) + 'px');    // -8 à +8 px
+    a.style.setProperty('--rot', (rnd(i + 1) * 11 - 5.5).toFixed(2) + 'deg');  // -5,5° à +5,5°
+    a.style.setProperty('--ty',  (rnd(i + 13) * 32 - 16).toFixed(1) + 'px');   // -16 à +16 px
+    a.style.setProperty('--tx',  (rnd(i + 29) * 24 - 12).toFixed(1) + 'px');   // -12 à +12 px
     a.addEventListener('click', function (e) { e.preventDefault(); openLightbox(i); });
     if (isVideo(src)) {
       // vignette vidéo : première image seulement (léger), badge ▶ via CSS
