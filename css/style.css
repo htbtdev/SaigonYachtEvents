@@ -9,9 +9,9 @@
   --text-muted: #56585e;
   --text-muted-dark: #a9adb5;
   --white: #ffffff;
-  --font-head: "Outfit", sans-serif;
-  --font-base: "DM Sans", sans-serif;
-  --font-body: "Inter", sans-serif;
+  --font-head: "Playfair Display", serif;   /* titres — police du proto3 */
+  --font-base: "Nunito Sans", sans-serif;   /* texte — police du proto3 */
+  --font-body: "Nunito Sans", sans-serif;
   --maxw: 1200px;
 }
 
@@ -123,7 +123,7 @@ a { text-decoration: none; color: inherit; }
 
 .hero h1 {
   font-family: var(--font-head);
-  font-weight: 600;
+  font-weight: 500;
   font-size: clamp(40px, 7vw, 72px);
   letter-spacing: -0.5px;
 }
@@ -136,7 +136,7 @@ a { text-decoration: none; color: inherit; }
 }
 .hero-sub {
   font-family: var(--font-base);
-  font-weight: 700;
+  font-weight: 600;
   font-size: clamp(18px, 2.4vw, 24px);
   margin-bottom: 20px;
 }
@@ -252,7 +252,7 @@ a { text-decoration: none; color: inherit; }
 }
 .section-title {
   font-family: var(--font-head);
-  font-weight: 600;
+  font-weight: 500;
   font-size: clamp(34px, 5vw, 48px);
 }
 .services .section-title { color: #fff; }
@@ -280,7 +280,7 @@ a { text-decoration: none; color: inherit; }
 }
 .card h3 {
   font-family: var(--font-head);
-  font-weight: 700;
+  font-weight: 500;
   font-size: 18px;
   color: #fff;
   margin: 22px 0 10px;
@@ -406,7 +406,7 @@ a { text-decoration: none; color: inherit; }
 }
 .site-footer h5 {
   font-family: var(--font-head);
-  font-weight: 600;
+  font-weight: 500;
   font-size: 26px;
   color: #fff;
 }
