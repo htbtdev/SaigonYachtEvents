@@ -1,0 +1,292 @@
+/* =========================================================
+   Saigon Yacht Events — Luxury Yacht Rental in Ho Chi Minh City
+   Rebuilt static site
+   ========================================================= */
+
+:root {
+  --dark: #1d1e20;
+  --services-bg: #0f0a14;
+  --text-muted: #56585e;
+  --text-muted-dark: #a9adb5;
+  --white: #ffffff;
+  --font-head: "Outfit", sans-serif;
+  --font-base: "DM Sans", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --maxw: 1200px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-base);
+  color: var(--dark);
+  background: var(--services-bg);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img { display: block; max-width: 100%; }
+a { text-decoration: none; color: inherit; }
+
+/* ---------------- Header ---------------- */
+.site-header {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px clamp(20px, 5vw, 72px);
+}
+
+.brand { position: relative; display: block; line-height: 0; }
+.brand-img { height: 82px; width: auto; }
+.brand-name {
+  position: absolute;
+  top: 50%;
+  left: 27%;
+  right: 34%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.2;
+  color: var(--dark);
+  font-family: var(--font-base);
+  white-space: nowrap;
+  pointer-events: none;
+}
+.brand-name strong { font-size: 17px; font-weight: 500; }
+.brand-name span { font-size: 15px; }
+
+.main-nav { display: flex; align-items: center; gap: 26px; }
+.main-nav a { color: var(--white); font-family: var(--font-body); font-size: 16px; font-weight: 500; }
+.nav-link.active { text-decoration: underline; text-underline-offset: 6px; }
+
+/* language dropdown */
+.lang { position: relative; }
+.lang-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: 0;
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.lang-btn svg { width: 10px; height: 10px; transition: transform .2s; }
+.lang.open .lang-btn svg { transform: rotate(180deg); }
+.lang-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 150px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 12px 30px rgba(0,0,0,.18);
+  padding: 6px;
+  display: none;
+}
+.lang.open .lang-menu { display: block; }
+.lang-menu a {
+  display: block;
+  padding: 9px 14px;
+  border-radius: 7px;
+  color: var(--dark);
+  font-family: var(--font-body);
+  font-size: 15px;
+}
+.lang-menu a:hover, .lang-menu a.active { background: #f2f3f5; }
+
+.fb {
+  width: 40px; height: 40px;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: #fff;
+}
+.fb svg { width: 40px; height: 40px; }
+
+/* ---------------- Hero ---------------- */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  color: var(--white);
+  padding: 130px 20px 60px;
+  background: linear-gradient(180deg, rgba(10,20,35,.45) 0%, rgba(10,18,30,.55) 100%),
+              url("../assets/img/hero-bg.jpg") center/cover no-repeat;
+}
+
+.hero h1 {
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: clamp(40px, 7vw, 72px);
+  letter-spacing: -0.5px;
+}
+.stars { font-size: 16px; letter-spacing: 3px; margin: 6px 0 18px; color: #fff; }
+.hero-sub {
+  font-family: var(--font-base);
+  font-weight: 700;
+  font-size: clamp(18px, 2.4vw, 24px);
+  margin-bottom: 20px;
+}
+.hero-lead {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1.55;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+/* hero collage */
+.collage {
+  margin-top: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+.collage img {
+  width: 260px;
+  height: 320px;
+  object-fit: cover;
+  margin-left: -26px;
+  box-shadow: 0 18px 40px rgba(0,0,0,.35);
+}
+.collage img:first-child { margin-left: 0; }
+.collage img:nth-child(even) { margin-top: 26px; }
+
+/* ---------------- Services ---------------- */
+.services {
+  background: var(--services-bg);
+  color: var(--white);
+  padding: 90px 20px 100px;
+  text-align: center;
+}
+.section-title {
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: clamp(34px, 5vw, 48px);
+}
+.services .section-title { color: #fff; }
+.section-intro {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  max-width: 640px;
+  margin: 18px auto 56px;
+  color: var(--text-muted-dark);
+}
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 34px;
+  max-width: var(--maxw);
+  margin: 0 auto;
+}
+.card { text-align: center; }
+.card img {
+  width: 100%;
+  aspect-ratio: 400 / 304;
+  object-fit: cover;
+  border-radius: 4px;
+}
+.card h3 {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 18px;
+  color: #fff;
+  margin: 22px 0 10px;
+}
+.card p {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--text-muted-dark);
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+/* ---------------- Gallery ---------------- */
+.gallery {
+  background: #fff;
+  padding: 90px 20px 100px;
+  text-align: center;
+}
+.gallery .section-title { color: var(--dark); }
+.gallery .section-intro { color: var(--text-muted); }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  max-width: var(--maxw);
+  margin: 0 auto;
+}
+.grid img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 4px;
+  transition: transform .35s ease;
+}
+.grid a { overflow: hidden; border-radius: 4px; display: block; }
+.grid a:hover img { transform: scale(1.06); }
+
+/* ---------------- Contact / Footer ---------------- */
+.contact {
+  background: #fff;
+  text-align: center;
+  padding: 20px 20px 70px;
+}
+.contact h2 {
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: clamp(28px, 4vw, 40px);
+  color: var(--dark);
+  margin-bottom: 22px;
+}
+.contact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-body);
+  font-size: 18px;
+  color: var(--dark);
+}
+.contact-link img { width: 34px; height: 34px; }
+.contact-link:hover { text-decoration: underline; }
+
+.site-footer {
+  background: var(--services-bg);
+  color: #8b8d94;
+  text-align: center;
+  padding: 26px 20px;
+  font-family: var(--font-body);
+  font-size: 14px;
+}
+
+/* ---------------- Responsive ---------------- */
+@media (max-width: 900px) {
+  .cards { grid-template-columns: 1fr; max-width: 420px; }
+  .grid { grid-template-columns: repeat(2, 1fr); }
+  .collage { flex-wrap: wrap; gap: 10px; }
+  .collage img { width: 44%; height: auto; aspect-ratio: 260/320; margin-left: 0; }
+  .collage img:nth-child(even) { margin-top: 0; }
+}
+@media (max-width: 620px) {
+  .site-header { flex-direction: column; gap: 14px; padding: 14px 16px; }
+  .brand-img { height: 66px; }
+  .brand-name strong { font-size: 13px; }
+  .brand-name span { font-size: 12px; }
+  .main-nav { gap: 18px; }
+  .hero { padding-top: 210px; }
+}
