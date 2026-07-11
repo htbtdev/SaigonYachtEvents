@@ -130,7 +130,7 @@
   if (hero && !reduceMotion) {
     var lights = document.createElement('div');
     lights.className = 'lights';
-    for (var i = 0; i < 16; i++) {
+    for (var i = 0; i < 28; i++) {
       var d = document.createElement('span');
       d.className = 'light';
       var s = 3 + Math.random() * 7;                          // taille 3-10 px
