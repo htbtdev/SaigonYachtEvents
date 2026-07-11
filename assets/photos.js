@@ -8,7 +8,7 @@ window.SITE_PHOTOS = {
     "assets/img/Page1/03.jpg",
     "assets/img/Page1/04.jpg",
     "assets/img/Page1/05.jpg",
-    "assets/img/Page1/IMG_0478.MP4"
+    "assets/img/Page1/06-clip.mp4"
   ],
   "gallery": [
     "assets/img/Gallery/01.jpg",

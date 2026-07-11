@@ -24,6 +24,7 @@ Reproduction fidèle du site original en HTML/CSS statique, sans dépendance à 
 │       ├── Services/     # decoration.jpg, food.jpg, special.jpg
 │       └── Gallery/      # Photos de la galerie
 ├── Photos/               # Sources photo haute résolution
+├── Videos/               # Sources vidéo (brutes, non publiées sur le site)
 └── site original/        # Copie du site d'origine (référence)
 ```
 
@@ -36,6 +37,8 @@ Les deux langues (EN et VI) utilisent **les mêmes photos**.
   survol ; les vidéos jouent en boucle, sans son. Affichage par ordre alphabétique
   (nommer `01.jpg`, `02.jpg`… pour contrôler l'ordre).
   Conseil vidéo : clips courts (10-30 s), format portrait, compressés (quelques Mo).
+  Les vidéos brutes (téléphone, caméra) vont dans `Videos/` à la racine — on en
+  tire des clips compressés pour le site.
 - **Galerie** : déposer les photos dans `assets/img/Gallery/` — **tout** le contenu
   du dossier est affiché automatiquement (avec visionneuse au clic)
 - Puis **double-cliquer sur `update-photos.bat`** (régénère la liste `assets/photos.js`)
