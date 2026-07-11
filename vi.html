@@ -104,43 +104,6 @@
   </footer>
 
   <script src="assets/photos.js"></script>
-  <script>
-    // photos dynamiques : affiche tout le contenu des dossiers Page1 et Gallery
-    (function () {
-      var P = window.SITE_PHOTOS || { page1: [], gallery: [] };
-      var collage = document.querySelector('.collage');
-      P.page1.forEach(function (src) {
-        var img = document.createElement('img');
-        img.src = src; img.alt = 'saigonyachtevents'; img.loading = 'lazy';
-        collage.appendChild(img);
-      });
-      var grid = document.querySelector('.grid');
-      P.gallery.forEach(function (src) {
-        var a = document.createElement('a');
-        a.href = src; a.target = '_blank'; a.rel = 'noopener';
-        var img = document.createElement('img');
-        img.src = src; img.alt = 'saigonyachtevents'; img.loading = 'lazy';
-        a.appendChild(img);
-        grid.appendChild(a);
-      });
-    })();
-    (function () {
-      var lang = document.getElementById('lang');
-      var btn = lang.querySelector('.lang-btn');
-      btn.addEventListener('click', function (e) {
-        e.stopPropagation();
-        lang.classList.toggle('open');
-        btn.setAttribute('aria-expanded', lang.classList.contains('open'));
-      });
-      document.addEventListener('click', function () { lang.classList.remove('open'); });
-    })();
-    // header opaque au scroll (comme l'original)
-    (function () {
-      var header = document.querySelector('.site-header');
-      function onScroll() { header.classList.toggle('scrolled', window.scrollY > 8); }
-      window.addEventListener('scroll', onScroll, { passive: true });
-      onScroll();
-    })();
-  </script>
+  <script src="assets/site.js"></script>
 </body>
 </html>
