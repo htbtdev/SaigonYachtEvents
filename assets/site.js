@@ -52,14 +52,16 @@
   /* ---------- Gallery (grille) : photos + vidéos ---------- */
   function isVideo(src) { return /\.(mp4|webm)$/i.test(src); }
 
+  var DELAYS = ['', 'd1', 'd2', 'd3']; // apparition en cascade, comme le proto
   var grid = document.querySelector('.grid');
   P.gallery.forEach(function (src, i) {
     var a = document.createElement('a');
     a.href = src;
+    a.className = ('reveal ' + DELAYS[i % 4]).trim();
     a.addEventListener('click', function (e) { e.preventDefault(); openLightbox(i); });
     if (isVideo(src)) {
       // vignette vidéo : première image seulement (léger), badge ▶ via CSS
-      a.className = 'is-video';
+      a.classList.add('is-video');
       var v = document.createElement('video');
       v.src = src + '#t=0.1'; // force l'affichage de la première image
       v.preload = 'metadata';
