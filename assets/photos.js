@@ -28,6 +28,7 @@ window.SITE_PHOTOS = {
     "assets/img/Gallery/13.jpg",
     "assets/img/Gallery/14.jpg",
     "assets/img/Gallery/15.jpg",
-    "assets/img/Gallery/16.jpg"
+    "assets/img/Gallery/16.jpg",
+    "assets/img/Gallery/17-clip.mp4"
   ]
 };
