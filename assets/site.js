@@ -49,20 +49,33 @@
     });
   }
 
-  /* ---------- photos dynamiques : Gallery (grille) ---------- */
+  /* ---------- Gallery (grille) : photos + vidéos ---------- */
+  function isVideo(src) { return /\.(mp4|webm)$/i.test(src); }
+
   var grid = document.querySelector('.grid');
   P.gallery.forEach(function (src, i) {
     var a = document.createElement('a');
     a.href = src;
     a.addEventListener('click', function (e) { e.preventDefault(); openLightbox(i); });
-    var img = document.createElement('img');
-    img.src = src; img.alt = 'saigonyachtevents'; img.loading = 'lazy';
-    a.appendChild(img);
+    if (isVideo(src)) {
+      // vignette vidéo : première image seulement (léger), badge ▶ via CSS
+      a.className = 'is-video';
+      var v = document.createElement('video');
+      v.src = src + '#t=0.1'; // force l'affichage de la première image
+      v.preload = 'metadata';
+      v.muted = true;
+      v.setAttribute('playsinline', '');
+      a.appendChild(v);
+    } else {
+      var img = document.createElement('img');
+      img.src = src; img.alt = 'saigonyachtevents'; img.loading = 'lazy';
+      a.appendChild(img);
+    }
     grid.appendChild(a);
   });
 
   /* ---------- lightbox (fermer, précédente/suivante) ---------- */
-  var lb = null, lbImg, lbCounter, current = 0;
+  var lb = null, lbImg, lbVideo, lbCounter, current = 0;
 
   function build() {
     lb = document.createElement('div');
@@ -71,10 +84,12 @@
       '<button class="lb-close" aria-label="Fermer">&times;</button>' +
       '<button class="lb-prev" aria-label="Photo précédente">&#10094;</button>' +
       '<img alt="saigonyachtevents" />' +
+      '<video controls playsinline style="display:none"></video>' +
       '<button class="lb-next" aria-label="Photo suivante">&#10095;</button>' +
       '<div class="lb-counter"></div>';
     document.body.appendChild(lb);
     lbImg = lb.querySelector('img');
+    lbVideo = lb.querySelector('video');
     lbCounter = lb.querySelector('.lb-counter');
 
     lb.querySelector('.lb-close').addEventListener('click', close);
@@ -108,7 +123,21 @@
     var n = P.gallery.length;
     if (!n) return;
     current = (i + n) % n; // boucle : après la dernière, revient à la première
-    lbImg.src = P.gallery[current];
+    var src = P.gallery[current];
+    // on met en pause la vidéo précédente avant de changer de visuel
+    lbVideo.pause();
+    if (isVideo(src)) {
+      lbImg.style.display = 'none';
+      lbVideo.style.display = '';
+      lbVideo.src = src;
+      var p = lbVideo.play();
+      if (p && p.catch) p.catch(function () {}); // lecture auto, contrôles dispo
+    } else {
+      lbVideo.removeAttribute('src');
+      lbVideo.style.display = 'none';
+      lbImg.style.display = '';
+      lbImg.src = src;
+    }
     lbCounter.textContent = (current + 1) + ' / ' + n;
   }
 
@@ -120,6 +149,7 @@
   }
 
   function close() {
+    lbVideo.pause(); // coupe la lecture en quittant la visionneuse
     lb.classList.remove('open');
     document.body.style.overflow = '';
   }

@@ -39,8 +39,10 @@ Les deux langues (EN et VI) utilisent **les mêmes photos**.
   Conseil vidéo : clips courts (10-30 s), format portrait, compressés (quelques Mo).
   Les vidéos brutes (téléphone, caméra) vont dans `Videos/` à la racine — on en
   tire des clips compressés pour le site.
-- **Galerie** : déposer les photos dans `assets/img/Gallery/` — **tout** le contenu
-  du dossier est affiché automatiquement (avec visionneuse au clic)
+- **Galerie** : déposer photos **et vidéos** (`.mp4` / `.webm`) dans
+  `assets/img/Gallery/` — **tout** le contenu du dossier est affiché automatiquement.
+  Les vidéos ont un badge ▶ sur leur vignette et se lisent dans la visionneuse
+  (avec les contrôles lecture/son)
 - Puis **double-cliquer sur `update-photos.bat`** (régénère la liste `assets/photos.js`)
   et pousser sur git
 

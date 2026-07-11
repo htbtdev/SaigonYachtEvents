@@ -19,8 +19,8 @@ function list(dir, re) {
 }
 
 const data = {
-  page1: list('Page1', MEDIA),  // cadres penchés (photos + clips vidéo mp4/webm)
-  gallery: list('Gallery', IMG), // grille de la galerie
+  page1: list('Page1', MEDIA),    // cadres penchés (photos + clips vidéo mp4/webm)
+  gallery: list('Gallery', MEDIA), // grille de la galerie (photos + vidéos)
 };
 
 const out =
