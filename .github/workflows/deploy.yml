@@ -27,6 +27,7 @@ jobs:
         run: |
           mkdir -p _site
           cp index.html vi.html site.webmanifest _site/
+          cp apple-touch-icon.png apple-touch-icon-precomposed.png _site/
           cp -r css assets _site/
           touch _site/.nojekyll
 
