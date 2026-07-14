@@ -12,17 +12,23 @@
 
   /* ---------- Page1 : carrousel lent des cadres penchés ----------
      Photos ET clips vidéo (mp4/webm) — les vidéos jouent en boucle, sans son. */
+  function posterFor(src) {
+    return 'assets/img/posters/' + src.split('/').pop().replace(/\.[^.]+$/, '') + '.webp';
+  }
   function makeMedia(src) {
     if (/\.(mp4|webm)$/i.test(src)) {
       var v = document.createElement('video');
-      v.src = src;
-      v.muted = true; v.loop = true; v.autoplay = true;
+      // chargement paresseux : la vraie source n'est posée que quand le cadre
+      // devient visible (voir l'observer plus bas). L'image poster s'affiche
+      // en attendant → aucune vidéo téléchargée au démarrage.
+      v.dataset.src = src;
+      v.poster = posterFor(src);
+      v.muted = true; v.loop = true;
       v.setAttribute('muted', '');          // nécessaire pour l'autoplay mobile
       v.setAttribute('playsinline', '');    // pas de plein écran forcé sur iOS
-      v.preload = 'auto';
-      // relance la lecture dès que la vidéo est prête (l'autoplay seul est parfois ignoré)
+      v.preload = 'none';
       v.addEventListener('canplay', function () {
-        if (v.paused) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+        if (v.dataset.visible === '1' && v.paused) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
       });
       return v;
     }
@@ -48,18 +54,34 @@
     });
     track.style.animationDuration = (set.length * 7) + 's'; // ~7 s par visuel
     collage.appendChild(track);
-    // certains navigateurs ignorent l'attribut autoplay : on force la lecture,
-    // et on relance quand l'onglet redevient visible (Chrome met en pause les
-    // vidéos des pages masquées)
-    var playAll = function () {
-      track.querySelectorAll('video').forEach(function (v) {
+
+    // chaque clip ne se charge et ne joue que lorsqu'il est visible à l'écran ;
+    // dès qu'il sort, on met en pause → seuls 2-3 clips chargent au démarrage
+    var videos = track.querySelectorAll('video');
+    if (videos.length) {
+      var playVisible = function (v) {
+        if (!v.src) v.src = v.dataset.src; // pose la vraie source au premier passage
         if (v.paused) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+      };
+      if ('IntersectionObserver' in window) {
+        var vObs = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            var v = e.target;
+            if (e.isIntersecting) { v.dataset.visible = '1'; playVisible(v); }
+            else { v.dataset.visible = ''; v.pause(); }
+          });
+        }, { root: null, rootMargin: '150px', threshold: 0.01 });
+        videos.forEach(function (v) { vObs.observe(v); });
+      } else {
+        videos.forEach(function (v) { v.dataset.visible = '1'; playVisible(v); });
+      }
+      // au retour sur l'onglet, on relance les clips visibles
+      document.addEventListener('visibilitychange', function () {
+        if (document.visibilityState === 'visible') {
+          videos.forEach(function (v) { if (v.dataset.visible === '1') playVisible(v); });
+        }
       });
-    };
-    playAll();
-    document.addEventListener('visibilitychange', function () {
-      if (document.visibilityState === 'visible') playAll();
-    });
+    }
   }
 
   /* ---------- Gallery (grille) : photos + vidéos ---------- */
@@ -69,27 +91,28 @@
      Clé = nom du fichier dans assets/img/Gallery. Les fichiers sans
      légende reçoivent une phrase de la réserve ci-dessous.
      La page VI définit ses propres légendes via window.GALLERY_CAPTIONS. */
+  // clés = nom du fichier SANS extension (marche pour .jpg, .webp, .mp4…)
   var CAPTIONS = window.GALLERY_CAPTIONS || {
-    '01.jpg': 'Love is in the air',
-    '02.jpg': 'She said yes!',
-    '03.jpg': 'Just the two of us',
-    '04.jpg': 'Forever starts here',
-    '05.jpg': 'Girls night!',
-    '06.jpg': 'Happy birthday!',
-    '07.jpg': 'Party time!',
-    '08.jpg': 'Glam squad',
-    '09.jpg': 'Boys trip',
-    '10.jpg': 'What a party!',
-    '11.jpg': 'Night to remember',
-    '12.jpg': 'Golden hour',
-    '13.jpg': 'Make a wish!',
-    '14.jpg': 'Family day',
-    '15.jpg': "Chef's magic",
-    '16.jpg': 'Bon appétit!',
-    '17-clip.mp4': 'Cheers!',
-    '18-clip.mp4': 'Saigon by night',
-    '19-clip.mp4': 'Birthday cruise',
-    '20-clip.mp4': 'White party!'
+    '01': 'Love is in the air',
+    '02': 'She said yes!',
+    '03': 'Just the two of us',
+    '04': 'Forever starts here',
+    '05': 'Girls night!',
+    '06': 'Happy birthday!',
+    '07': 'Party time!',
+    '08': 'Glam squad',
+    '09': 'Boys trip',
+    '10': 'What a party!',
+    '11': 'Night to remember',
+    '12': 'Golden hour',
+    '13': 'Make a wish!',
+    '14': 'Family day',
+    '15': "Chef's magic",
+    '16': 'Bon appétit!',
+    '17-clip': 'Cheers!',
+    '18-clip': 'Saigon by night',
+    '19-clip': 'Birthday cruise',
+    '20-clip': 'White party!'
   };
   var CAPTION_POOL = window.GALLERY_CAPTION_POOL || ['Memories', 'Good vibes', 'What a day!', 'On the river'];
 
@@ -108,24 +131,21 @@
     a.style.setProperty('--tx',  (rnd(i + 29) * 24 - 12).toFixed(1) + 'px');   // -12 à +12 px
     a.addEventListener('click', function (e) { e.preventDefault(); openLightbox(i); });
     if (isVideo(src)) {
-      // vignette vidéo : première image seulement (léger), badge ▶ via CSS
+      // vignette vidéo = image poster (légère), badge ▶ via CSS.
+      // La vraie vidéo n'est chargée qu'au clic (dans la visionneuse).
       a.classList.add('is-video');
-      var v = document.createElement('video');
-      v.src = src + '#t=0.1'; // force l'affichage de la première image
-      v.preload = 'metadata';
-      v.muted = true;
-      v.setAttribute('playsinline', '');
-      a.appendChild(v);
+      var img = document.createElement('img');
+      img.src = posterFor(src); img.alt = 'saigonyachtevents'; img.loading = 'lazy';
+      a.appendChild(img);
     } else {
       var img = document.createElement('img');
       img.src = src; img.alt = 'saigonyachtevents'; img.loading = 'lazy';
       a.appendChild(img);
     }
     // légende manuscrite du polaroid — inclinaison propre à chacune
-    var name = src.split('/').pop();
     var cap = document.createElement('span');
     cap.className = 'cap';
-    cap.textContent = CAPTIONS[name] || CAPTION_POOL[i % CAPTION_POOL.length];
+    cap.textContent = captionFor(src, i);
     cap.style.transform = 'rotate(' + (rnd(i + 47) * 6 - 3).toFixed(2) + 'deg)';
     a.appendChild(cap);
     grid.appendChild(a);
@@ -134,8 +154,9 @@
   /* ---------- lightbox polaroid (pile + étalage) ---------- */
   var lb = null, lbBackdrop, lbImg, lbVideo, lbCap, lbCounter, current = 0;
 
+  function baseName(src) { return src.split('/').pop().replace(/\.[^.]+$/, ''); }
   function captionFor(src, i) {
-    return CAPTIONS[src.split('/').pop()] || CAPTION_POOL[i % CAPTION_POOL.length];
+    return CAPTIONS[baseName(src)] || CAPTION_POOL[i % CAPTION_POOL.length];
   }
 
   // au clic : tous les polaroids de la grille volent vers le centre → pile

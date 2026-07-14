@@ -172,7 +172,7 @@ a { text-decoration: none; color: inherit; }
   color: var(--white);
   padding: 130px 20px 60px;
   background: linear-gradient(180deg, rgba(10,20,35,.45) 0%, rgba(10,18,30,.55) 100%),
-              url("../assets/img/hero-bg.jpg") center/cover no-repeat;
+              url("../assets/img/hero-bg.webp") center/cover no-repeat;
 }
 /* effet parallaxe : le fond reste fixe pendant que le contenu défile.
    Réservé aux appareils à pointeur précis (souris) : background-attachment:

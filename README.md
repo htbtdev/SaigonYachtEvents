@@ -19,10 +19,11 @@ Reproduction fidèle du site original en HTML/CSS statique, sans dépendance à 
 │   └── generate-photos.js  # Génère assets/photos.js (liste des photos)
 ├── assets/
 │   ├── photos.js         # Liste des photos (générée — ne pas éditer)
-│   └── img/              # Logo, favicon, fond du hero, icônes
-│       ├── Page1/        # Photos des cadres penchés de la première page
-│       ├── Services/     # decoration.jpg, food.jpg, special.jpg
-│       └── Gallery/      # Photos de la galerie
+│   └── img/              # Logo, favicon, fond du hero, icônes (WebP optimisés)
+│       ├── Page1/        # Photos (.webp) + clips (.mp4) des cadres penchés
+│       ├── Services/     # decoration.webp, food.webp, special.webp
+│       ├── Gallery/      # Photos (.webp) + vidéos (.mp4) de la galerie
+│       └── posters/      # Images d'aperçu des vidéos (générées)
 ├── Photos/               # Sources photo haute résolution
 ├── Videos/               # Sources vidéo (brutes, non publiées sur le site)
 └── site original/        # Copie du site d'origine (référence)
@@ -47,7 +48,12 @@ Les deux langues (EN et VI) utilisent **les mêmes photos**.
   et pousser sur git
 
 - **Services** : 3 photos fixes — pour en changer une, remplacer le fichier en
-  gardant son nom : `decoration.jpg`, `food.jpg` ou `special.jpg` (pas besoin du .bat)
+  gardant son nom : `decoration.webp`, `food.webp` ou `special.webp` (pas besoin du .bat)
+
+> ⚡ **Optimisation** : les images sont en WebP redimensionné et les vidéos ont une
+> image d'aperçu (poster) — chargement initial < 1 Mo. Les nouvelles photos/vidéos
+> ajoutées en JPG/MP4 bruts marcheront, mais pour rester léger il vaut mieux les
+> faire optimiser (conversion WebP + poster) avant mise en ligne.
 
 ## Sections
 
