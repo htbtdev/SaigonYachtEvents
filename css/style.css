@@ -174,9 +174,12 @@ a { text-decoration: none; color: inherit; }
   background: linear-gradient(180deg, rgba(10,20,35,.45) 0%, rgba(10,18,30,.55) 100%),
               url("../assets/img/hero-bg.jpg") center/cover no-repeat;
 }
-/* effet parallaxe : le fond reste fixe pendant que le contenu défile
-   (desktop uniquement — background-attachment: fixed est bogué sur mobile iOS) */
-@media (min-width: 901px) {
+/* effet parallaxe : le fond reste fixe pendant que le contenu défile.
+   Réservé aux appareils à pointeur précis (souris) : background-attachment:
+   fixed est bogué sur iOS/iPadOS (fond dimensionné sur la hauteur totale
+   de la page = image énormément zoomée). Sur tablette/mobile tactile, on
+   garde le défilement normal, fond en cover comme sur PC. */
+@media (min-width: 901px) and (hover: hover) and (pointer: fine) {
   .hero { background-attachment: fixed; }
 }
 
