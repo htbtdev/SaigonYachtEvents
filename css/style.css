@@ -162,31 +162,38 @@ a { text-decoration: none; color: inherit; }
   .main-nav .nav-link {
     display: flex;
     align-items: center;
+    justify-content: center;
+    position: relative;
     padding: 16px 24px;
     width: 100%;
-    text-align: left;
     text-decoration: none;
   }
   .main-nav .nav-link.active { color: var(--proto-gold); }
-  /* icône maison devant Home */
+  /* icône maison ancrée à gauche, libellé centré */
   .main-nav .nav-link::before {
     content: "";
-    width: 22px;
-    height: 22px;
-    margin-right: 12px;
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    left: 24px;
+    top: 50%;
+    transform: translateY(-50%);
     flex-shrink: 0;
     background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 10.5 12 3l9 7.5'/%3E%3Cpath d='M5 9.5V21h14V9.5'/%3E%3C/svg%3E") no-repeat center / contain;
   }
 
   /* langue : les deux langues affichées directement (combo EN masqué) */
-  .lang { display: flex; align-items: center; width: 100%; position: static; }
+  .lang { display: flex; align-items: center; justify-content: center; width: 100%; position: relative; }
   .lang-btn { display: none; }
-  /* icône globe devant les langues */
+  /* icône globe ancrée à gauche, langues centrées */
   .lang::before {
     content: "";
-    width: 22px;
-    height: 22px;
-    margin: 0 12px 0 24px;
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    left: 24px;
+    top: 50%;
+    transform: translateY(-50%);
     flex-shrink: 0;
     background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.8'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M3 12h18'/%3E%3Cpath d='M12 3c2.6 2.7 2.6 15.3 0 18M12 3c-2.6 2.7-2.6 15.3 0 18'/%3E%3C/svg%3E") no-repeat center / contain;
   }
@@ -200,28 +207,34 @@ a { text-decoration: none; color: inherit; }
     margin: 0;
   }
   .lang-menu a {
-    flex: 1;                     /* moitié-moitié */
-    padding: 16px 24px;
+    padding: 16px 16px;
     border-radius: 0;
     color: #fff;
     font-size: 16px;
     text-align: center;
   }
-  .lang-menu a + a { border-left: 1px solid rgba(255, 255, 255, .08); }
+  .lang-menu a + a { margin-left: 16px; }
   .lang-menu a.active { color: var(--proto-gold); }
   .lang-menu a:hover { background: rgba(255, 255, 255, .06); }
 
-  /* Facebook : icône tout à gauche + libellé à côté */
+  /* Facebook : icône ancrée à gauche, libellé centré */
   .main-nav .fb {
     width: 100%;
-    justify-content: flex-start;
-    padding: 12px 24px;
+    justify-content: center;
+    position: relative;
+    padding: 14px 24px;
     margin: 0;
   }
-  .main-nav .fb svg { width: 30px; height: 30px; }
+  .main-nav .fb svg {
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    left: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
   .main-nav .fb::after {
     content: "Facebook";
-    margin-left: 12px;
     color: #fff;
     font-family: var(--font-body);
     font-size: 16px;
@@ -495,7 +508,7 @@ a { text-decoration: none; color: inherit; }
 
 /* ---------------- Gallery ---------------- */
 .gallery {
-  background: var(--proto-off); /* blanc cassé du proto3 */
+  background: #ece6d9; /* beige chaud clair — nette différence avec le blanc des Services */
   padding: 90px 20px 100px;
   text-align: center;
 }
