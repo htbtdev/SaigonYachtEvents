@@ -300,13 +300,16 @@
   }
 
   /* ---------- parallaxe du fond du hero ----------
-     Déplacement du fond au scroll (moitié de la vitesse) via transform.
-     Marche sur iPad/iOS, contrairement à background-attachment: fixed. */
+     Le fond est décalé au scroll via transform pour rester figé à l'écran
+     (facteur 1 = 100 %, comme background-attachment: fixed du PC, mais qui
+     marche aussi sur iPad/iOS sans le bug de zoom). Baisser PARALLAX_SPEED
+     pour un effet plus subtil (0.5 = moitié vitesse). */
+  var PARALLAX_SPEED = 1;
   var heroBg = document.querySelector('.hero-bg');
   if (heroBg && !reduceMotion) {
     var pTicking = false;
     var updateParallax = function () {
-      heroBg.style.transform = 'translate3d(0,' + (window.scrollY * 0.5) + 'px,0)';
+      heroBg.style.transform = 'translate3d(0,' + (window.scrollY * PARALLAX_SPEED) + 'px,0)';
       pTicking = false;
     };
     window.addEventListener('scroll', function () {
