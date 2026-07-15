@@ -29,7 +29,9 @@ body {
   color: var(--dark);
   background: var(--services-bg);
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  /* pas d'overflow-x: hidden ici : il casse le backdrop-filter du header
+     sur iOS/iPadOS (bug WebKit). Le carrousel large est déjà contenu par
+     .collage (overflow: hidden), donc aucun débordement horizontal. */
 }
 
 img { display: block; max-width: 100%; }
