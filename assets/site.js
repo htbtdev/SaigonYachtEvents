@@ -299,6 +299,22 @@
     hero.insertBefore(lights, hero.firstChild);
   }
 
+  /* ---------- parallaxe du fond du hero ----------
+     Déplacement du fond au scroll (moitié de la vitesse) via transform.
+     Marche sur iPad/iOS, contrairement à background-attachment: fixed. */
+  var heroBg = document.querySelector('.hero-bg');
+  if (heroBg && !reduceMotion) {
+    var pTicking = false;
+    var updateParallax = function () {
+      heroBg.style.transform = 'translate3d(0,' + (window.scrollY * 0.5) + 'px,0)';
+      pTicking = false;
+    };
+    window.addEventListener('scroll', function () {
+      if (!pTicking) { requestAnimationFrame(updateParallax); pTicking = true; }
+    }, { passive: true });
+    updateParallax();
+  }
+
   /* ---------- menu mobile (hamburger) ---------- */
   var navToggle = document.querySelector('.nav-toggle');
   var siteHeader = document.querySelector('.site-header');
