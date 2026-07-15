@@ -173,19 +173,17 @@ a { text-decoration: none; color: inherit; }
   color: var(--white);
   padding: 130px 20px 60px;
 }
-/* fond du hero en couche séparée, déplacée au scroll en JS (voir site.js).
-   Parallaxe qui marche sur TOUS les appareils, iPad compris — on n'utilise
-   PAS background-attachment: fixed (bogué/zoomé sur iOS/iPadOS). */
+/* fond du hero en vrai élément position:fixed (composité par le navigateur) :
+   parfaitement figé, sans JS et sans saccade, sur TOUS les appareils iPad
+   compris. On n'utilise PAS background-attachment: fixed (bogué/zoomé sur iOS).
+   z-index -1 : peint au-dessus du fond du body mais derrière tout le contenu
+   → visible à travers le hero (transparent), masqué par les sections opaques. */
 .hero-bg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  position: fixed;
+  inset: 0;
+  z-index: -1;
   background: linear-gradient(180deg, rgba(10,20,35,.45) 0%, rgba(10,18,30,.55) 100%),
               url("../assets/img/hero-bg.webp") center/cover no-repeat;
-  z-index: 0;
-  will-change: transform;
 }
 
 .hero h1 {

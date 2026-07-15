@@ -299,24 +299,8 @@
     hero.insertBefore(lights, hero.firstChild);
   }
 
-  /* ---------- parallaxe du fond du hero ----------
-     Le fond est décalé au scroll via transform pour rester figé à l'écran
-     (facteur 1 = 100 %, comme background-attachment: fixed du PC, mais qui
-     marche aussi sur iPad/iOS sans le bug de zoom). Baisser PARALLAX_SPEED
-     pour un effet plus subtil (0.5 = moitié vitesse). */
-  var PARALLAX_SPEED = 1;
-  var heroBg = document.querySelector('.hero-bg');
-  if (heroBg && !reduceMotion) {
-    var pTicking = false;
-    var updateParallax = function () {
-      heroBg.style.transform = 'translate3d(0,' + (window.scrollY * PARALLAX_SPEED) + 'px,0)';
-      pTicking = false;
-    };
-    window.addEventListener('scroll', function () {
-      if (!pTicking) { requestAnimationFrame(updateParallax); pTicking = true; }
-    }, { passive: true });
-    updateParallax();
-  }
+  /* Le fond figé du hero (.hero-bg) est géré entièrement en CSS
+     (position: fixed) — aucun JavaScript nécessaire. */
 
   /* ---------- menu mobile (hamburger) ---------- */
   var navToggle = document.querySelector('.nav-toggle');
