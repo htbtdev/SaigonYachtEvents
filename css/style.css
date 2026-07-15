@@ -144,25 +144,58 @@ a { text-decoration: none; color: inherit; }
     left: 0;
     right: 0;
     flex-direction: column;
+    align-items: stretch;
     gap: 0;
     background: #0d131a;
-    padding: 8px 0 18px;
+    padding: 0 0 6px;
     box-shadow: 0 16px 30px rgba(0, 0, 0, .35);
   }
   .site-header.menu-open { background-color: #0d131a; }
   .site-header.menu-open .main-nav { display: flex; }
-  .main-nav .nav-link { padding: 14px 0; width: 100%; text-align: center; }
-  .lang { display: flex; flex-direction: column; align-items: center; padding: 6px 0; }
+
+  /* chaque entrée = ligne pleine largeur, alignée à gauche, avec séparateur */
+  .main-nav .nav-link,
+  .lang-menu a,
+  .main-nav .fb {
+    border-top: 1px solid rgba(255, 255, 255, .08);
+  }
+  .main-nav .nav-link {
+    padding: 16px 24px;
+    width: 100%;
+    text-align: left;
+    text-decoration: none;
+  }
+  .main-nav .nav-link.active { color: var(--proto-gold); }
+
+  /* langue : les deux langues affichées directement (combo EN masqué) */
+  .lang { display: block; width: 100%; position: static; }
+  .lang-btn { display: none; }
   .lang-menu {
     position: static;
-    display: none;
+    display: block;
     background: transparent;
     box-shadow: none;
     min-width: 0;
-    margin-top: 6px;
+    padding: 0;
+    margin: 0;
   }
-  .lang.open .lang-menu { display: block; text-align: center; }
-  .fb { margin: 10px auto 0; }
+  .lang-menu a {
+    padding: 16px 24px;
+    border-radius: 0;
+    color: #fff;
+    font-size: 16px;
+  }
+  .lang-menu a.active { color: var(--proto-gold); }
+  .lang-menu a:hover { background: rgba(255, 255, 255, .06); }
+
+  /* Facebook : ligne avec icône alignée à gauche */
+  .main-nav .fb {
+    width: 100%;
+    justify-content: flex-start;
+    padding: 12px 22px;
+    margin: 0;
+  }
+  .main-nav .fb svg { width: 32px; height: 32px; }
 }
 
 /* ---------------- Hero ---------------- */
