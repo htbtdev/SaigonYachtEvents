@@ -17,14 +17,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <!-- Dancing Script pour les légendes manuscrites : Caveat ne couvre pas les diacritiques vietnamiens -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Nunito+Sans:wght@300;400;600&family=Dancing+Script:wght@500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=4" />
+  <link rel="stylesheet" href="css/style.css?v=5" />
 </head>
 <body>
-  <!-- fond animé fixe : skyline Ken Burns + eau canvas + nuit/étoiles pilotées au scroll -->
+  <!-- fond animé fixe : vol de drone nocturne (séquence d'images) piloté par le scroll + nuit/étoiles -->
   <div class="hero-bg" aria-hidden="true">
-    <div class="bg-img"></div>
-    <div class="bg-water"><canvas id="water"></canvas></div>
-    <div class="bg-mist"></div>
+    <canvas class="bg-cam"></canvas>
     <div class="bg-night"></div>
     <div class="bg-stars"></div>
   </div>
@@ -161,7 +159,7 @@
     };
     window.GALLERY_CAPTION_POOL = ['Kỷ niệm đẹp', 'Vui hết nấc', 'Một ngày tuyệt vời', 'Trên sông Sài Gòn'];
   </script>
-  <script src="assets/photos.js?v=4"></script>
-  <script src="assets/site.js?v=4"></script>
+  <script src="assets/photos.js?v=5"></script>
+  <script src="assets/site.js?v=5"></script>
 </body>
 </html>

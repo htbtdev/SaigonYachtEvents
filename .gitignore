@@ -7,3 +7,5 @@ desktop.ini
 
 # footage tiers sans licence — ne jamais publier sur le repo public
 Videos/Fond Saigon River.mp4
+# source 4K Pexels (107 Mo > limite GitHub 100 Mo) — les frames extraites sont dans assets/img/flycam
+Videos/13294283_3840_2160_30fps.mp4

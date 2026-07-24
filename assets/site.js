@@ -351,134 +351,111 @@
   } else {
     revealEls.forEach(function (el) { el.classList.add('in'); });
   }
-
-  /* ---------- moteur « fly cam » : décollage au-dessus du fleuve ----------
-     Au scroll, la caméra s'élève comme un drone : la skyline glisse et
-     dézoome (léger flottement), l'eau file sous nous et s'estompe, la brume
-     se dissipe, la nuit tombe et les étoiles s'allument en altitude.
-     Un seul moteur rAF (~30 fps) pilote tout : caméra, nuit, étoiles,
-     header et rendu de l'eau. En prefers-reduced-motion, tout reste piloté
-     par le scroll (geste utilisateur) mais sans flottement ni boucle. */
+  /* ---------- moteur « fly cam » : vol de drone piloté par le scroll ----------
+     Le fond est une séquence de 99 frames WebP (assets/img/flycam) extraites
+     d'un plan de drone nocturne libre de droits (Pexels). Le scroll pilote
+     l'index de frame (scrubbing) avec un lissage doux ; les frames se
+     chargent progressivement (1 sur 8, puis 1 sur 4, 2, toutes) pour ne pas
+     peser sur le chargement initial. La nuit et les étoiles s'intensifient
+     en "altitude". */
+  var CAM_N = 99;
+  var camCanvas = document.querySelector('.bg-cam');
   var header = document.querySelector('.site-header');
-  var bgImgEl = document.querySelector('.bg-img');
-  var bgWaterEl = document.querySelector('.bg-water');
-  var bgMistEl = document.querySelector('.bg-mist');
   var nightEl = document.querySelector('.bg-night');
   var starsEl = document.querySelector('.bg-stars');
-  var waterNight = 0; // progression jour→nuit partagée avec l'eau
 
   function scrollProgress() {
     var max = document.documentElement.scrollHeight - window.innerHeight;
     return max > 0 ? Math.min(1, window.scrollY / max) : 0;
   }
 
-  function applyFlyCam(t) { // t en secondes (0 = pas de flottement de drone)
-    header.classList.toggle('scrolled', window.scrollY > 8);
-    var p = scrollProgress();
-    waterNight = p;
-    // easing doux (ease-in-out) pour un décollage naturel
-    var e = p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
-    // caméra : vue rapprochée du fleuve → plan large sur le ciel
-    var scale = 1.28 - .26 * e;
-    var ty = -8 + 16 * e; // % : l'image glisse, le regard monte
-    var wx = t ? Math.sin(t * .32) * .5 : 0;  // flottement de drone
-    var wy = t ? Math.cos(t * .21) * .4 : 0;
-    if (bgImgEl) {
-      bgImgEl.style.transform = 'translate3d(' + wx.toFixed(2) + '%,' +
-        (ty + wy).toFixed(2) + '%,0) scale(' + scale.toFixed(3) + ')';
-    }
-    // l'eau file sous la caméra et s'estompe avec l'altitude
-    if (bgWaterEl) {
-      bgWaterEl.style.transform = 'translate3d(0,' + (e * 55).toFixed(1) + '%,0)';
-      bgWaterEl.style.opacity = (1 - e * .85).toFixed(3);
-    }
-    // brume au ras de l'eau, dissipée en montant
-    if (bgMistEl) bgMistEl.style.opacity = ((1 - e) * .5).toFixed(3);
-    if (nightEl) nightEl.style.opacity = (p * .75).toFixed(3);
-    if (starsEl) starsEl.style.opacity = Math.min(1, Math.max(0, (p - .25) / .5)).toFixed(3);
+  if (camCanvas && camCanvas.getContext) {
+    var cctx = camCanvas.getContext('2d');
+    var camImgs = new Array(CAM_N);   // Image ou true=chargée/décodée
+    var camPos = 0;                    // position lissée dans la séquence
+    var camDrawn = -1;                 // dernière frame dessinée
+    var cW = 0, cH = 0;
+
+    var camSrc = function (i) {
+      var s = '00' + (i + 1);
+      return 'assets/img/flycam/f_' + s.slice(-3) + '.webp';
+    };
+
+    var sizeCam = function () {
+      var dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      cW = camCanvas.clientWidth;
+      cH = camCanvas.clientHeight;
+      camCanvas.width = Math.max(1, Math.round(cW * dpr));
+      camCanvas.height = Math.max(1, Math.round(cH * dpr));
+      cctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      camDrawn = -1; // force un redessin à la bonne taille
+    };
+
+    // dessine la frame i en "cover" (remplit l'écran en rognant)
+    var drawCam = function (i) {
+      var img = camImgs[i];
+      if (!img || !img.width || !cW || !cH) return false;
+      var s = Math.max(cW / img.width, cH / img.height);
+      var dw = img.width * s, dh = img.height * s;
+      cctx.drawImage(img, (cW - dw) / 2, (cH - dh) / 2, dw, dh);
+      camDrawn = i;
+      return true;
+    };
+
+    // frame chargée la plus proche de la cible (la séquence se remplit par passes)
+    var nearestLoaded = function (i) {
+      for (var d = 0; d < CAM_N; d++) {
+        if (i - d >= 0 && camImgs[i - d] && camImgs[i - d].width) return i - d;
+        if (i + d < CAM_N && camImgs[i + d] && camImgs[i + d].width) return i + d;
+      }
+      return -1;
+    };
+
+    // chargement progressif par passes de plus en plus denses
+    var loadFrame = function (i, cb) {
+      if (camImgs[i]) { if (cb) cb(); return; }
+      var im = new Image();
+      im.onload = function () { camImgs[i] = im; if (cb) cb(); };
+      im.onerror = function () { if (cb) cb(); };
+      im.src = camSrc(i);
+      camImgs[i] = im; // marqueur "en cours" (width=0 tant que pas chargée)
+    };
+    var loadPass = function (stride, then) {
+      var pending = 0, done = false;
+      for (var i = 0; i < CAM_N; i += stride) {
+        if (!camImgs[i] || !camImgs[i].width) {
+          pending++;
+          loadFrame(i, function () { if (--pending === 0 && done && then) then(); });
+        }
+      }
+      done = true;
+      if (pending === 0 && then) then();
+    };
+
+    sizeCam();
+    window.addEventListener('resize', function () { sizeCam(); }, { passive: true });
+    // passes : 1re frame tout de suite, puis 1/8, 1/4, 1/2, toutes
+    loadFrame(0, function () { drawCam(0); });
+    loadPass(8, function () { loadPass(4, function () { loadPass(2, function () { loadPass(1, null); }); }); });
   }
 
-  /* ---------- eau : canvas 2D (vagues + écume + reflets dorés) ---------- */
-  var waterCanvas = document.getElementById('water');
-  var drawWater = null;
-  if (waterCanvas && waterCanvas.getContext) {
-    var wctx = waterCanvas.getContext('2d');
-    var wW = 0, wH = 0;
-    var sizeWater = function () {
-      var dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-      wW = waterCanvas.clientWidth;
-      wH = waterCanvas.clientHeight;
-      waterCanvas.width = Math.max(1, Math.round(wW * dpr));
-      waterCanvas.height = Math.max(1, Math.round(wH * dpr));
-      wctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    };
-
-    // bandes de vagues : hauteur relative, amplitude, fréquence, vitesse, teinte
-    var BANDS = [
-      { base: .26, amp: 13, k: .011, w: .85, ph: 0,   col: '34,80,124', a: .40 },
-      { base: .48, amp: 19, k: .008, w: .62, ph: 2.1, col: '22,58,96',  a: .52 },
-      { base: .70, amp: 25, k: .006, w: .46, ph: 4.2, col: '12,34,64',  a: .68 }
-    ];
-    // reflets dorés : positions déterministes (même désordre à chaque visite)
-    var GLINTS = [];
-    for (var gi = 0; gi < 22; gi++) {
-      GLINTS.push({ x: rnd(gi + 71), band: gi % 3, w: 24 + rnd(gi + 83) * 66, ph: rnd(gi + 97) * 6.28 });
+  function applyFlyCam(smooth) {
+    header.classList.toggle('scrolled', window.scrollY > 8);
+    var p = scrollProgress();
+    if (camCanvas && cctx) {
+      var target = p * (CAM_N - 1);
+      camPos = smooth ? camPos + (target - camPos) * .22 : target;
+      var idx = nearestLoaded(Math.round(camPos));
+      if (idx >= 0 && idx !== camDrawn) drawCam(idx);
     }
-
-    drawWater = function (t) {
-      // garde : redimensionne si la taille client a changé (ou était 0 à l'init)
-      if (waterCanvas.clientWidth !== wW || waterCanvas.clientHeight !== wH) sizeWater();
-      wctx.clearRect(0, 0, wW, wH);
-      var grad = wctx.createLinearGradient(0, 0, 0, wH);
-      grad.addColorStop(0, 'rgba(12,26,44,0)');
-      grad.addColorStop(1, 'rgba(8,18,32,.9)');
-      wctx.fillStyle = grad;
-      wctx.fillRect(0, 0, wW, wH);
-
-      var dark = 1 + waterNight * .4; // la nuit fonce les vagues
-      for (var b = 0; b < BANDS.length; b++) {
-        var v = BANDS[b];
-        var baseY = v.base * wH;
-        var pts = [];
-        for (var x = 0; x <= wW + 14; x += 14) {
-          pts.push([x, baseY
-            + v.amp * Math.sin(v.k * x + v.w * t + v.ph)
-            + v.amp * .4 * Math.sin(v.k * 2.3 * x - v.w * .7 * t)]);
-        }
-        // nappe
-        wctx.beginPath();
-        wctx.moveTo(0, wH);
-        for (var i3 = 0; i3 < pts.length; i3++) wctx.lineTo(pts[i3][0], pts[i3][1]);
-        wctx.lineTo(wW + 14, wH);
-        wctx.closePath();
-        wctx.fillStyle = 'rgba(' + v.col + ',' + Math.min(1, v.a * dark).toFixed(3) + ')';
-        wctx.fill();
-        // écume : liseré clair le long de la crête
-        wctx.beginPath();
-        wctx.moveTo(pts[0][0], pts[0][1]);
-        for (var i4 = 1; i4 < pts.length; i4++) wctx.lineTo(pts[i4][0], pts[i4][1]);
-        wctx.strokeStyle = 'rgba(190,220,250,' + (.08 + b * .05).toFixed(2) + ')';
-        wctx.lineWidth = 1.5;
-        wctx.stroke();
-      }
-      // reflets dorés scintillants sur les crêtes
-      for (var g2 = 0; g2 < GLINTS.length; g2++) {
-        var gl = GLINTS[g2];
-        var vb = BANDS[gl.band];
-        var gx = gl.x * wW;
-        var gy = vb.base * wH + vb.amp * Math.sin(vb.k * gx + vb.w * t + vb.ph) - 2;
-        var tw = .16 + .2 * (0.5 + 0.5 * Math.sin(t * 1.7 + gl.ph)); // scintillement
-        wctx.fillStyle = 'rgba(201,169,106,' + (tw * (1 - waterNight * .3)).toFixed(3) + ')';
-        wctx.beginPath();
-        wctx.ellipse(gx, gy, gl.w / 2, 1.8, 0, 0, 6.2832);
-        wctx.fill();
-      }
-    };
+    // léger assombrissement + étoiles en "altitude" (le plan est déjà nocturne)
+    if (nightEl) nightEl.style.opacity = (p * .4).toFixed(3);
+    if (starsEl) starsEl.style.opacity = Math.min(1, Math.max(0, (p - .3) / .5)).toFixed(3);
   }
 
   if (reduceMotion) {
-    // pas de boucle autonome : tout suit le scroll, eau en frame statique
-    var rmTick = function () { applyFlyCam(0); if (drawWater) drawWater(0); };
+    // pas de boucle : tout suit directement le scroll (geste utilisateur)
+    var rmTick = function () { applyFlyCam(false); };
     window.addEventListener('scroll', function () { requestAnimationFrame(rmTick); }, { passive: true });
     window.addEventListener('resize', function () { requestAnimationFrame(rmTick); }, { passive: true });
     rmTick();
@@ -490,12 +467,9 @@
       requestAnimationFrame(engine);
       if (ts - engineLast < 33) return; // plafond ~30 fps
       engineLast = ts;
-      var t = ts / 1000;
-      applyFlyCam(t);
-      if (drawWater) drawWater(t);
+      applyFlyCam(true);
     };
     requestAnimationFrame(engine);
-    // pause quand l'onglet est caché, reprise au retour
     document.addEventListener('visibilitychange', function () {
       if (document.hidden) { engineOn = false; }
       else if (!engineOn) { engineOn = true; requestAnimationFrame(engine); }

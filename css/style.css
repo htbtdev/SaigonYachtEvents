@@ -257,18 +257,18 @@ a { text-decoration: none; color: inherit; }
 /* ---------------- Fond animé fixe (tout le site) ----------------
    Pile de couches en position:fixed (composité navigateur, pas de
    background-attachment: fixed — bogué/zoomé sur iOS) :
-     .bg-img    la skyline, zoom lent Ken Burns (transform sur l'élément)
-     .bg-water  canvas 2D : vagues + reflets dorés (rendu dans site.js)
-     .bg-night  teinte bleu nuit, opacité 0→.6 pilotée par le scroll (JS)
-     .bg-stars  étoiles CSS, apparaissent après ~30 % de scroll (JS)
+     .bg-cam    canvas : vol de drone nocturne (assets/img/flycam), l'index
+                de frame est piloté par le scroll (scrubbing, site.js)
+     .bg-night  assombrissement léger piloté par le scroll (JS)
+     .bg-stars  étoiles CSS, apparaissent en « altitude » (JS)
    Visible à travers le hero (transparent) et deviné derrière les
    sections translucides « verre ». L'ordre DOM fait le z-ordering. */
 .hero-bg {
   position: fixed;
   inset: 0;
   z-index: -1;
-  overflow: hidden; /* clippe le scale du Ken Burns — pas ancêtre du header, sans danger iOS */
-  background: #0a1220;
+  overflow: hidden;
+  background: #0a1220 url("../assets/img/hero-bg.webp") center/cover no-repeat; /* poster avant la 1re frame */
 }
 /* voile sombre statique (l'ancien dégradé), au-dessus de l'image scalée */
 .hero-bg::after {
@@ -277,29 +277,15 @@ a { text-decoration: none; color: inherit; }
   inset: 0;
   background: linear-gradient(180deg, rgba(10,20,35,.45) 0%, rgba(10,18,30,.55) 100%);
 }
-/* couche caméra : surdimensionnée (±15 %) pour que le vol (translate/scale
-   pilotés en JS) ne découvre jamais les bords */
-.bg-img {
+/* canvas du vol de drone : la séquence d'images (assets/img/flycam) y est
+   dessinée en cover, l'index de frame étant piloté par le scroll (site.js).
+   En attendant la 1re frame, le fond affiche la photo skyline (poster). */
+.bg-cam {
   position: absolute;
-  inset: -15%;
-  background: url("../assets/img/hero-bg.webp") center/cover no-repeat;
-  will-change: transform;
-}
-/* brume au ras de l'eau, dérive lente ; dissipée en altitude (opacité JS) */
-.bg-mist {
-  position: absolute;
-  inset: -10% -25%;
-  opacity: .5;
-  background:
-    radial-gradient(60% 45% at 22% 78%, rgba(190,205,225,.30), transparent 70%),
-    radial-gradient(50% 40% at 68% 70%, rgba(170,190,215,.22), transparent 70%),
-    radial-gradient(70% 50% at 45% 88%, rgba(200,214,232,.26), transparent 72%);
-  animation: mistDrift 26s ease-in-out infinite alternate;
-  will-change: transform;
-}
-@keyframes mistDrift {
-  from { transform: translateX(-3%); }
-  to   { transform: translateX(3%); }
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 .bg-night {
   position: absolute;
@@ -321,18 +307,6 @@ a { text-decoration: none; color: inherit; }
     radial-gradient(1.2px 1.2px at 300px 60px, rgba(220,230,255,.75), transparent 55%);
   background-size: 220px 170px, 320px 250px, 260px 210px, 290px 230px, 350px 270px;
 }
-/* eau : bande basse fondue dans la skyline par un mask dégradé */
-.bg-water {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 38vh;
-  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 45%);
-  mask-image: linear-gradient(to bottom, transparent, #000 45%);
-}
-.bg-water canvas { width: 100%; height: 100%; display: block; }
-
 /* fenêtres sur le fond animé entre les sections : la caméra en vol s'y
    révèle en plein écran pendant le scroll */
 .bg-window {
@@ -432,7 +406,6 @@ a { text-decoration: none; color: inherit; }
     opacity: 1;
   }
   .light { animation: none; display: none; }
-  .bg-mist { animation: none; } /* la caméra reste pilotée par le scroll (geste utilisateur) */
 }
 
 /* hero collage — carrousel lent de cadres penchés (photos et clips vidéo)
