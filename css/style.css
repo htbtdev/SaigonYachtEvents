@@ -559,10 +559,12 @@ a { text-decoration: none; color: inherit; }
 
 /* ---------------- Gallery ---------------- */
 .gallery {
-  background: rgba(248, 245, 239, .82); /* beige très clair translucide */
+  background: transparent; /* le vol de drone passe en plein derrière */
   padding: 90px 20px 100px;
   text-align: center;
 }
+.gallery .section-title { color: #fff; }
+.gallery .section-intro { color: rgba(255, 255, 255, .82); }
 /* blur « verre dépoli » sur desktop uniquement (grands backdrop-filter
    au-dessus d'un canvas animé = coûteux sur iPad/mobile) */
 @media (hover: hover) and (pointer: fine) {
@@ -571,22 +573,15 @@ a { text-decoration: none; color: inherit; }
     -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
   }
-  .gallery {
-    background: rgba(248, 245, 239, .70);
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
-  }
 }
 /* lightbox ouverte : on retire le blur des sections, sinon .gallery devient
    un stacking context et les polaroids volants (z 90) passeraient SOUS le
    voile .lb-backdrop (z 80) — la classe est posée par site.js */
-body.lb-open .services,
-body.lb-open .gallery {
+body.lb-open .services {
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
 }
-.gallery .section-title { color: var(--proto-ink); }
-.gallery .section-intro { color: var(--proto-grey); margin-bottom: 56px; }
+.gallery .section-intro { margin-bottom: 56px; }
 /* ---- galerie façon mur de polaroids ---- */
 .grid {
   display: grid;
