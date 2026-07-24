@@ -285,13 +285,16 @@
     setTimeout(function () { document.body.classList.remove('lb-open'); }, 750);
   }
 
-  /* ---------- paillettes flottantes du hero (effet de la maquette) ---------- */
-  var hero = document.querySelector('.hero');
+  /* ---------- paillettes dorées flottantes (sur tout le site) ----------
+     Placées dans la couche de fond fixe (.hero-bg) : elles flottent sur
+     le vol de drone, derrière le contenu, visibles à travers toutes les
+     sections transparentes — plus seulement sur la première page. */
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (hero && !reduceMotion) {
+  var lightsHost = document.querySelector('.hero-bg');
+  if (lightsHost && !reduceMotion) {
     var lights = document.createElement('div');
     lights.className = 'lights';
-    for (var i = 0; i < 28; i++) {
+    for (var i = 0; i < 34; i++) {
       var d = document.createElement('span');
       d.className = 'light';
       var s = 3 + Math.random() * 7;                          // taille 3-10 px
@@ -302,7 +305,7 @@
       d.style.animationDelay = (Math.random() * 10) + 's';    // départs étalés
       lights.appendChild(d);
     }
-    hero.insertBefore(lights, hero.firstChild);
+    lightsHost.appendChild(lights);
   }
 
   /* Le fond figé du hero (.hero-bg) est géré entièrement en CSS
