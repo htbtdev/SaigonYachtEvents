@@ -271,7 +271,9 @@ a { text-decoration: none; color: inherit; }
   inset: 0;
   z-index: -1;
   overflow: hidden;
-  background: #0a1220 url("../assets/img/hero-bg.webp") center/cover no-repeat; /* poster avant la 1re frame */
+  /* poster = 1re frame du drone (même image que le canvas) → aucun
+     clignotement de l'ancienne skyline lors du pull-to-refresh iOS */
+  background: #0a1220 url("../assets/img/flycam/f_001.webp?v=720") center/cover no-repeat;
 }
 /* voile sombre statique (l'ancien dégradé), au-dessus de l'image scalée */
 .hero-bg::after {
