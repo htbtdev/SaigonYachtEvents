@@ -49,14 +49,17 @@ a { text-decoration: none; color: inherit; }
   background-color: transparent;
   transition: background-color .3s ease-in-out, box-shadow .3s ease-in-out;
 }
-/* une fois scrollé : bandeau sombre semi-transparent + flou du contenu
-   derrière (effet verre dépoli), au lieu d'un noir plein */
+/* header transparent en permanence (le fond drone est assez sombre) —
+   aucune bande au scroll. Ombre douce sur le contenu pour rester lisible
+   même quand une frame très éclairée passe derrière. */
 .site-header.scrolled {
-  background-color: rgba(13, 19, 26, .6);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, .1);
+  background-color: transparent;
+  box-shadow: none;
 }
+.brand-img { filter: drop-shadow(0 2px 8px rgba(0, 0, 0, .55)); }
+.main-nav a,
+.lang-btn { text-shadow: 0 1px 6px rgba(0, 0, 0, .55); }
+.fb svg { filter: drop-shadow(0 2px 8px rgba(0, 0, 0, .45)); }
 
 /* le PNG du logo contient déjà l'avatar, le nom, le numéro et les icônes */
 .brand { display: block; line-height: 0; }
