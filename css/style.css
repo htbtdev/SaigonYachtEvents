@@ -307,11 +307,12 @@ a { text-decoration: none; color: inherit; }
     radial-gradient(1.2px 1.2px at 300px 60px, rgba(220,230,255,.75), transparent 55%);
   background-size: 220px 170px, 320px 250px, 260px 210px, 290px 230px, 350px 270px;
 }
-/* fenêtres sur le fond animé entre les sections : la caméra en vol s'y
-   révèle en plein écran pendant le scroll */
+/* fenêtres sur le fond animé entre les sections : espace transparent où la
+   caméra en vol se révèle en plein écran. AUCUN dégradé sombre (il créait
+   une démarcation visible entre les sections). */
 .bg-window {
   height: 48vh;
-  background: linear-gradient(180deg, rgba(6,10,18,.35), transparent 18%, transparent 82%, rgba(6,10,18,.35));
+  background: transparent;
 }
 @media (max-width: 768px) {
   .bg-window { height: 34vh; }
@@ -446,10 +447,10 @@ a { text-decoration: none; color: inherit; }
 }
 
 /* ---------------- Services (style du proto3) ---------------- */
-/* verre translucide : le fond animé se devine derrière */
+/* transparent : le vol de drone passe en plein derrière, textes en blanc */
 .services {
-  background: rgba(255, 255, 255, .84);
-  color: var(--proto-ink);
+  background: transparent;
+  color: #fff;
   padding: 96px 5vw;
   text-align: center;
 }
@@ -459,7 +460,8 @@ a { text-decoration: none; color: inherit; }
   font-size: clamp(34px, 5vw, 48px);
   line-height: 1.15;
 }
-.services .section-title { color: var(--proto-ink); }
+.services .section-title { color: #fff; }
+.services .section-intro { color: rgba(255, 255, 255, .82); }
 .eyebrow {
   font-size: 12px;
   letter-spacing: .36em;
@@ -521,7 +523,7 @@ a { text-decoration: none; color: inherit; }
   font-family: var(--font-head);
   font-weight: 500;
   font-size: 22px;
-  color: var(--proto-ink);
+  color: #fff;
   margin-bottom: 8px;
 }
 .card h3::after {
@@ -538,7 +540,7 @@ a { text-decoration: none; color: inherit; }
   font-family: var(--font-body);
   font-size: 15px;
   line-height: 1.6;
-  color: var(--proto-grey);
+  color: rgba(255, 255, 255, .8);
   max-width: 330px;
   margin: 12px auto 0;
 }
@@ -565,22 +567,6 @@ a { text-decoration: none; color: inherit; }
 }
 .gallery .section-title { color: #fff; }
 .gallery .section-intro { color: rgba(255, 255, 255, .82); }
-/* blur « verre dépoli » sur desktop uniquement (grands backdrop-filter
-   au-dessus d'un canvas animé = coûteux sur iPad/mobile) */
-@media (hover: hover) and (pointer: fine) {
-  .services {
-    background: rgba(255, 255, 255, .72);
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
-  }
-}
-/* lightbox ouverte : on retire le blur des sections, sinon .gallery devient
-   un stacking context et les polaroids volants (z 90) passeraient SOUS le
-   voile .lb-backdrop (z 80) — la classe est posée par site.js */
-body.lb-open .services {
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
-}
 .gallery .section-intro { margin-bottom: 56px; }
 /* ---- galerie façon mur de polaroids ---- */
 .grid {

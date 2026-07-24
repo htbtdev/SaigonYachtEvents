@@ -378,7 +378,9 @@
 
     var camSrc = function (i) {
       var s = '00' + (i + 1);
-      return 'assets/img/flycam/f_' + s.slice(-3) + '.webp';
+      // ?v : les frames gardent le même nom quand on change de qualité,
+      // ce suffixe force le rechargement (sinon le navigateur garde les anciennes)
+      return 'assets/img/flycam/f_' + s.slice(-3) + '.webp?v=720';
     };
 
     var sizeCam = function () {
