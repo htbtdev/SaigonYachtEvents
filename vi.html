@@ -17,13 +17,14 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <!-- Dancing Script pour les légendes manuscrites : Caveat ne couvre pas les diacritiques vietnamiens -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Nunito+Sans:wght@300;400;600&family=Dancing+Script:wght@500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=2" />
+  <link rel="stylesheet" href="css/style.css?v=3" />
 </head>
 <body>
   <!-- fond animé fixe : skyline Ken Burns + eau canvas + nuit/étoiles pilotées au scroll -->
   <div class="hero-bg" aria-hidden="true">
     <div class="bg-img"></div>
     <div class="bg-water"><canvas id="water"></canvas></div>
+    <div class="bg-mist"></div>
     <div class="bg-night"></div>
     <div class="bg-stars"></div>
   </div>
@@ -73,6 +74,8 @@
     <div class="collage"></div>
   </section>
 
+  <div class="bg-window" aria-hidden="true"></div>
+
   <!-- ===================== Services ===================== -->
   <section class="services" id="services">
     <div class="reveal">
@@ -101,6 +104,8 @@
     </div>
   </section>
 
+  <div class="bg-window" aria-hidden="true"></div>
+
   <!-- ===================== Gallery ===================== -->
   <section class="gallery" id="gallery">
     <div class="reveal">
@@ -113,6 +118,8 @@
     <!-- remplie automatiquement depuis assets/img/Gallery (voir photos.js) -->
     <div class="grid"></div>
   </section>
+
+  <div class="bg-window" aria-hidden="true"></div>
 
   <!-- ===================== Contact / Footer ===================== -->
   <footer class="site-footer" id="contact">
@@ -154,7 +161,7 @@
     };
     window.GALLERY_CAPTION_POOL = ['Kỷ niệm đẹp', 'Vui hết nấc', 'Một ngày tuyệt vời', 'Trên sông Sài Gòn'];
   </script>
-  <script src="assets/photos.js?v=2"></script>
-  <script src="assets/site.js?v=2"></script>
+  <script src="assets/photos.js?v=3"></script>
+  <script src="assets/site.js?v=3"></script>
 </body>
 </html>
