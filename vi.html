@@ -20,7 +20,13 @@
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <div class="hero-bg"></div>
+  <!-- fond animé fixe : skyline Ken Burns + eau canvas + nuit/étoiles pilotées au scroll -->
+  <div class="hero-bg" aria-hidden="true">
+    <div class="bg-img"></div>
+    <div class="bg-water"><canvas id="water"></canvas></div>
+    <div class="bg-night"></div>
+    <div class="bg-stars"></div>
+  </div>
 
   <!-- ===================== Header ===================== -->
   <header class="site-header">

@@ -265,6 +265,10 @@
   function openLightbox(i) {
     if (!lb) build();
     show(i);
+    // retire le blur des sections pendant la visionneuse : backdrop-filter
+    // sur .gallery créerait un stacking context et les polaroids volants
+    // (z 90) passeraient sous le voile (z 80) — voir body.lb-open en CSS
+    document.body.classList.add('lb-open');
     pileUp(); // les autres polaroids se rassemblent en pile
     lbBackdrop.classList.add('open');
     lb.classList.add('open');
@@ -277,6 +281,8 @@
     lbBackdrop.classList.remove('open');
     spreadOut(); // la pile s'éparpille, chaque polaroid retourne à sa place
     document.body.style.overflow = '';
+    // le blur des sections revient après l'animation de retour de la pile
+    setTimeout(function () { document.body.classList.remove('lb-open'); }, 750);
   }
 
   /* ---------- paillettes flottantes du hero (effet de la maquette) ---------- */
@@ -346,9 +352,126 @@
     revealEls.forEach(function (el) { el.classList.add('in'); });
   }
 
-  /* ---------- header opaque au scroll (comme l'original) ---------- */
+  /* ---------- driver scroll unifié : header + fond animé ----------
+     Un seul listener scroll (throttlé rAF) pilote : le header verre
+     dépoli, la transition crépuscule→nuit et l'apparition des étoiles.
+     Progression p = 0 en haut de page → 1 tout en bas. */
   var header = document.querySelector('.site-header');
-  function onScroll() { header.classList.toggle('scrolled', window.scrollY > 8); }
+  var nightEl = document.querySelector('.bg-night');
+  var starsEl = document.querySelector('.bg-stars');
+  var waterNight = 0; // partagé avec le rendu de l'eau (assombrit les vagues)
+  var fxTicking = false;
+  function applyScrollFx() {
+    fxTicking = false;
+    header.classList.toggle('scrolled', window.scrollY > 8);
+    // scrollHeight relu à chaque tick : la hauteur bouge avec le lazy-load
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    var p = max > 0 ? Math.min(1, window.scrollY / max) : 0;
+    waterNight = p;
+    if (nightEl) nightEl.style.opacity = (p * 0.6).toFixed(3);
+    if (starsEl) starsEl.style.opacity = Math.max(0, (p - 0.3) / 0.7).toFixed(3);
+  }
+  function onScroll() { if (!fxTicking) { fxTicking = true; requestAnimationFrame(applyScrollFx); } }
   window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
+  window.addEventListener('resize', onScroll, { passive: true });
+  applyScrollFx();
+
+  /* ---------- eau animée : canvas 2D léger ----------
+     3 bandes de vagues sinusoïdales + reflets dorés scintillants sur les
+     crêtes. ~30 fps max, DPR plafonné à 1.5, pause quand l'onglet est
+     caché, une seule frame statique si prefers-reduced-motion. */
+  var waterCanvas = document.getElementById('water');
+  if (waterCanvas && waterCanvas.getContext) {
+    var wctx = waterCanvas.getContext('2d');
+    var wW = 0, wH = 0;
+    var sizeWater = function () {
+      var dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      wW = waterCanvas.clientWidth;
+      wH = waterCanvas.clientHeight;
+      waterCanvas.width = Math.max(1, Math.round(wW * dpr));
+      waterCanvas.height = Math.max(1, Math.round(wH * dpr));
+      wctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+
+    // bandes de vagues : hauteur relative, amplitude, fréquence, vitesse, teinte
+    var BANDS = [
+      { base: .30, amp: 7,  k: .012, w: .55, ph: 0,   col: '10,25,45', a: .35 },
+      { base: .52, amp: 10, k: .009, w: .40, ph: 2.1, col: '12,30,52', a: .45 },
+      { base: .74, amp: 13, k: .007, w: .30, ph: 4.2, col: '8,20,38',  a: .60 }
+    ];
+    // reflets dorés : positions déterministes (même désordre à chaque visite)
+    var GLINTS = [];
+    for (var gi = 0; gi < 14; gi++) {
+      GLINTS.push({ x: rnd(gi + 71), band: gi % 3, w: 20 + rnd(gi + 83) * 50, ph: rnd(gi + 97) * 6.28 });
+    }
+
+    var drawWater = function (t) {
+      wctx.clearRect(0, 0, wW, wH);
+      // fond bleu profond (le mask CSS fond le haut dans la skyline)
+      var grad = wctx.createLinearGradient(0, 0, 0, wH);
+      grad.addColorStop(0, 'rgba(10,21,36,0)');
+      grad.addColorStop(1, 'rgba(6,14,26,.85)');
+      wctx.fillStyle = grad;
+      wctx.fillRect(0, 0, wW, wH);
+
+      var dark = 1 + waterNight * 0.5; // la nuit fonce les vagues
+      for (var b = 0; b < BANDS.length; b++) {
+        var v = BANDS[b];
+        var baseY = v.base * wH;
+        wctx.beginPath();
+        wctx.moveTo(0, wH);
+        for (var x = 0; x <= wW + 14; x += 14) {
+          wctx.lineTo(x, baseY
+            + v.amp * Math.sin(v.k * x + v.w * t + v.ph)
+            + v.amp * .4 * Math.sin(v.k * 2.3 * x - v.w * .7 * t));
+        }
+        wctx.lineTo(wW + 14, wH);
+        wctx.closePath();
+        wctx.fillStyle = 'rgba(' + v.col + ',' + Math.min(1, v.a * dark).toFixed(3) + ')';
+        wctx.fill();
+      }
+      // reflets dorés scintillants sur les crêtes
+      for (var g2 = 0; g2 < GLINTS.length; g2++) {
+        var gl = GLINTS[g2];
+        var vb = BANDS[gl.band];
+        var gx = gl.x * wW;
+        var gy = vb.base * wH + vb.amp * Math.sin(vb.k * gx + vb.w * t + vb.ph) - 2;
+        var tw = .10 + .12 * (0.5 + 0.5 * Math.sin(t * 1.7 + gl.ph)); // scintillement
+        wctx.fillStyle = 'rgba(201,169,106,' + (tw * (1 - waterNight * 0.35)).toFixed(3) + ')';
+        wctx.beginPath();
+        wctx.ellipse(gx, gy, gl.w / 2, 1.6, 0, 0, 6.2832);
+        wctx.fill();
+      }
+    };
+
+    sizeWater();
+    // au resize : redimensionne, et en reduced-motion redessine la frame statique
+    window.addEventListener('resize', function () {
+      sizeWater();
+      if (reduceMotion) drawWater(0);
+    }, { passive: true });
+
+    if (reduceMotion) {
+      drawWater(0); // frame statique unique
+    } else {
+      var waterOn = true;
+      var waterLast = 0;
+      var waterLoop = function (ts) {
+        if (!waterOn) return;
+        requestAnimationFrame(waterLoop);
+        if (ts - waterLast < 33) return; // plafond ~30 fps
+        waterLast = ts;
+        // garde : si la taille client a changé (ou était 0 à l'init — page
+        // chargée en arrière-plan), on redimensionne avant de dessiner
+        if (waterCanvas.clientWidth !== wW || waterCanvas.clientHeight !== wH) sizeWater();
+        drawWater(ts / 1000);
+      };
+      requestAnimationFrame(waterLoop);
+      // pause quand l'onglet est caché, reprise au retour
+      document.addEventListener('visibilitychange', function () {
+        if (document.hidden) { waterOn = false; }
+        else if (!waterOn) { waterOn = true; requestAnimationFrame(waterLoop); }
+      });
+    }
+  }
 })();

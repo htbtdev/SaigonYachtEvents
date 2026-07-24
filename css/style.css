@@ -254,18 +254,70 @@ a { text-decoration: none; color: inherit; }
   color: var(--white);
   padding: 130px 20px 60px;
 }
-/* fond du hero en vrai élément position:fixed (composité par le navigateur) :
-   parfaitement figé, sans JS et sans saccade, sur TOUS les appareils iPad
-   compris. On n'utilise PAS background-attachment: fixed (bogué/zoomé sur iOS).
-   z-index -1 : peint au-dessus du fond du body mais derrière tout le contenu
-   → visible à travers le hero (transparent), masqué par les sections opaques. */
+/* ---------------- Fond animé fixe (tout le site) ----------------
+   Pile de couches en position:fixed (composité navigateur, pas de
+   background-attachment: fixed — bogué/zoomé sur iOS) :
+     .bg-img    la skyline, zoom lent Ken Burns (transform sur l'élément)
+     .bg-water  canvas 2D : vagues + reflets dorés (rendu dans site.js)
+     .bg-night  teinte bleu nuit, opacité 0→.6 pilotée par le scroll (JS)
+     .bg-stars  étoiles CSS, apparaissent après ~30 % de scroll (JS)
+   Visible à travers le hero (transparent) et deviné derrière les
+   sections translucides « verre ». L'ordre DOM fait le z-ordering. */
 .hero-bg {
   position: fixed;
   inset: 0;
   z-index: -1;
-  background: linear-gradient(180deg, rgba(10,20,35,.45) 0%, rgba(10,18,30,.55) 100%),
-              url("../assets/img/hero-bg.webp") center/cover no-repeat;
+  overflow: hidden; /* clippe le scale du Ken Burns — pas ancêtre du header, sans danger iOS */
+  background: #0a1220;
 }
+/* voile sombre statique (l'ancien dégradé), au-dessus de l'image scalée */
+.hero-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(10,20,35,.45) 0%, rgba(10,18,30,.55) 100%);
+}
+.bg-img {
+  position: absolute;
+  inset: 0;
+  background: url("../assets/img/hero-bg.webp") center/cover no-repeat;
+  animation: kenburns 45s ease-in-out infinite alternate;
+  will-change: transform;
+}
+@keyframes kenburns {
+  from { transform: scale(1) translate(0, 0); }
+  to   { transform: scale(1.08) translate(-1.2%, -0.8%); }
+}
+.bg-night {
+  position: absolute;
+  inset: 0;
+  opacity: 0; /* piloté en JS : 0 → .6 selon le scroll */
+  background: linear-gradient(180deg, #040a16 0%, #081226 55%, #0b1730 100%);
+}
+/* champ d'étoiles : tuiles de radial-gradients à tailles différentes
+   (casse la répétition), limité au ciel (bas exclu) */
+.bg-stars {
+  position: absolute;
+  inset: 0 0 42% 0;
+  opacity: 0; /* piloté en JS : apparaît après ~30 % de scroll */
+  background-image:
+    radial-gradient(1px 1px at 27px 39px, rgba(255,255,255,.9), transparent 55%),
+    radial-gradient(1.4px 1.4px at 130px 92px, rgba(235,211,160,.8), transparent 55%),
+    radial-gradient(1px 1px at 210px 150px, rgba(255,255,255,.6), transparent 55%),
+    radial-gradient(1.2px 1.2px at 60px 180px, rgba(255,255,255,.75), transparent 55%);
+  background-size: 260px 200px, 380px 300px, 300px 240px, 340px 260px;
+}
+/* eau : bande basse fondue dans la skyline par un mask dégradé */
+.bg-water {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 38vh;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 45%);
+  mask-image: linear-gradient(to bottom, transparent, #000 45%);
+}
+.bg-water canvas { width: 100%; height: 100%; display: block; }
 
 .hero h1 {
   font-family: var(--font-head);
@@ -356,6 +408,7 @@ a { text-decoration: none; color: inherit; }
     opacity: 1;
   }
   .light { animation: none; display: none; }
+  .bg-img { animation: none; } /* pas de Ken Burns ; jour→nuit reste (piloté par le scroll utilisateur) */
 }
 
 /* hero collage — carrousel lent de cadres penchés (photos et clips vidéo)
@@ -396,8 +449,9 @@ a { text-decoration: none; color: inherit; }
 }
 
 /* ---------------- Services (style du proto3) ---------------- */
+/* verre translucide : le fond animé se devine derrière */
 .services {
-  background: #fff;
+  background: rgba(255, 255, 255, .92);
   color: var(--proto-ink);
   padding: 96px 5vw;
   text-align: center;
@@ -508,9 +562,31 @@ a { text-decoration: none; color: inherit; }
 
 /* ---------------- Gallery ---------------- */
 .gallery {
-  background: #f8f5ef; /* beige très clair chaud — différence douce avec le blanc des Services */
+  background: rgba(248, 245, 239, .9); /* beige très clair translucide */
   padding: 90px 20px 100px;
   text-align: center;
+}
+/* blur « verre dépoli » sur desktop uniquement (grands backdrop-filter
+   au-dessus d'un canvas animé = coûteux sur iPad/mobile) */
+@media (hover: hover) and (pointer: fine) {
+  .services {
+    background: rgba(255, 255, 255, .88);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+  .gallery {
+    background: rgba(248, 245, 239, .86);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+}
+/* lightbox ouverte : on retire le blur des sections, sinon .gallery devient
+   un stacking context et les polaroids volants (z 90) passeraient SOUS le
+   voile .lb-backdrop (z 80) — la classe est posée par site.js */
+body.lb-open .services,
+body.lb-open .gallery {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
 }
 .gallery .section-title { color: var(--proto-ink); }
 .gallery .section-intro { color: var(--proto-grey); margin-bottom: 56px; }
@@ -743,7 +819,7 @@ html[lang="vi"] .lb-cap { font-family: "Dancing Script", cursive; font-size: 25p
 /* ---------------- Contact / Footer ----------------
    comme le site live : barre sombre — Contact | ✉ email | f */
 .site-footer {
-  background: #0d131a;
+  background: rgba(13, 19, 26, .92); /* quasi opaque, laisse deviner le fond nuit */
   display: flex;
   align-items: center;
   justify-content: space-between;
